@@ -9,6 +9,7 @@
 
 ; Defaults
 ListLines, Off
+DetectHiddenWindows, On
 SetWorkingDir, % A_ScriptDir
 
 ; Environment
