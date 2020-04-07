@@ -334,7 +334,7 @@ sync()
 {
     if (!isLogged)
     {
-        MsgBox, 0x2010, % atWTitle, Loggin first.
+        MsgBox, 0x2010, % atWTitle, Login first.
         return
     }
     if (isLocked)
@@ -383,7 +383,7 @@ toggleLock()
 {
     if (!isLogged)
     {
-        MsgBox, 0x2010, % atWTitle, Loggin first.
+        MsgBox, 0x2010, % atWTitle, Login first.
         return
     }
     if (isLocked)
