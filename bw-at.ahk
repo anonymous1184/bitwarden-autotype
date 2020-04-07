@@ -5,7 +5,7 @@
 #SingleInstance, force
 
 ; Versioning: YY.MM.DD.build
-;@Ahk2Exe-SetVersion 20.03.24.1
+;@Ahk2Exe-SetVersion 20.04.07.1
 
 ; Defaults
 ListLines, Off
