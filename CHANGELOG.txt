@@ -1,0 +1,47 @@
+YYYY/MM/DD - MAJOR.MINOR.RELEASE
+————————————————————————————————
+[+] = Added
+[*] = Changed
+[-] = Removed
+[^] = Moved
+[=] = Unchanged
+[!] = Fix / Security
+
+
+2021/05/21 - 1.0.0
+——————————————————
+[!] Less fatal errors
+[!] Full Unicode support (#2)
+[!] Performance improvements
+[!] Support for passwords with spaces (#3)
+[-] Sync at login
+[-] oathtool for TOTP
+[+] Browser support
+[+] Keepass placeholders
+[+] Unlock via TOTP
+[+] Unlock/Login via PIN
+[+] favicon support for account selection
+[+] Major Browsers Support
+[+] Multiple account support per service
+[+] Scheduled sync
+[+] Automatic logout
+[+] Secure Password Generator
+[+] Two-Channel Auto-Type Obfuscation
+[+] Autorun at system startup
+[+] Ability to install and run with UI Access
+[+] Update checking
+[+] TOTP and Username-only hotkeys
+[^] AutoHotkey version 1.1.33.09
+[^] Bitwarden CLI version >= 1.11.0
+
+
+2020/04/07 - 0.0.2
+——————————————————
+[!] Issue #1
+[+] Build script
+[=] Bitwarden CLI version >= 1.9.0
+
+
+2020/03/24 - 0.0.1
+——————————————————
+[+] Initial release
