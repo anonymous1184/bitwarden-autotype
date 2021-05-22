@@ -1,1 +1,7 @@
-release/*
+# Folders
+.vscode
+dev
+release
+
+# Types
+*.code-workspace

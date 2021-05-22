@@ -1,0 +1,5 @@
+﻿
+menuExit()
+{
+    ExitApp
+}

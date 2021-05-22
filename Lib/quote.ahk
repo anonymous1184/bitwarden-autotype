@@ -1,0 +1,5 @@
+﻿
+quote(str)
+{
+    return """" str """"
+}
