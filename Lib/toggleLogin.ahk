@@ -5,7 +5,7 @@ toggleLogin(showTip := true)
     if isLogged
     {
         isLogged := false
-        TrayTip % appTitle, Logged out, 10, 0x20
+        tip("Logged out")
         ; Update Menu
         Menu Tray, Disable, 1&
         Menu Tray, Disable, 2&
@@ -55,7 +55,7 @@ toggleLogin(showTip := true)
         Menu Tray, Rename, 3&, Log&out
         Menu Tray, Icon, % A_IsCompiled ? A_ScriptFullPath : A_ScriptDir "\assets\bw-at.ico"
         if showTip
-            TrayTip % appTitle, Logged In, 10, 0x20
+            tip("Logged In")
         return passwd
     }
 }

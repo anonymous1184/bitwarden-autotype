@@ -26,7 +26,7 @@ init()
 
     ; Acknowledge
     Menu Tray, Icon, % A_IsCompiled ? A_ScriptFullPath : A_ScriptDir "\assets\bw-at.ico"
-    TrayTip % appTitle, Auto-Type Ready, 10, 0x20
+    tip("Auto-Type Ready")
 
     ; Setup PIN
     if INI.PIN.use = -1 && !INI.PIN.hex && pin := pinSetup()

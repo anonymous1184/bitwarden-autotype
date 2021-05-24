@@ -39,7 +39,7 @@ toggleLock(showTip := false)
         Menu Tray, Icon, % A_IsCompiled ? A_ScriptFullPath : A_ScriptDir "\assets\bw-at.ico"
         isLocked := false
         if showTip
-            TrayTip % appTitle, Vault unlocked, 10, 0x20
+            tip("Vault unlocked")
         return passwd
     }
     else
@@ -47,7 +47,7 @@ toggleLock(showTip := false)
         Menu Tray, Disable, 1&
         Menu Tray, Rename , 2&, Un&Lock
         if showTip
-            TrayTip % appTitle, Vault locked, 10, 0x20
+            tip("Vault locked")
         Menu Tray, Icon, shell32.dll, 48
         isLocked := true
     }
