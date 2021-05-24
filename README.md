@@ -130,7 +130,7 @@ This is a script-based utility; not a full-fledged, enterprise-ready application
 [04]: https://bitwarden.com "Bitwarden"
 [05]: https://github.com/anonymous1184/bitwarden-autotype/wiki "Wiki not written yet"
 [06]: https://keepass.info/help/v2/autotype_obfuscation.html "TCATO: Two-Channel Auto-Type Obfuscation"
-[07]: https://i.imgur.com/WeddYxr.png "Entry with Authenticator Key"
+[07]: https://i.imgur.com/Qwv9oKQ.png "Entry with Authenticator Key"
 [08]: https://github.com/bitwarden/cli "Bitwarden CLI"
 [09]: https://github.com/bitwarden/jslib/blob/master/src/models/view/loginUriView.ts#L9 "loginUriView.ts:9"
 [10]: https://github.com/bitwarden/jslib/blob/master/src/angular/components/icon.component.ts#L80 "icon.component.ts:6"
