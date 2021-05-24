@@ -5,13 +5,11 @@ DetectHiddenWindows On
 
 ; Arguments
 verbose := !quiet := DEBUG := false
-for i,arg in A_Args
-{
-    if arg ~= "i)[-|\/]quiet"
-        verbose := !quiet := true
-    else if arg ~= "i)[-|\/]debug"
-        DEBUG := true
-}
+if A_Args[1] ~= "i)[-|\/]quiet"
+    verbose := !quiet := true
+FileGetVersion version, % A_ScriptFullPath
+if StrSplit(version, ".")[1] > 2020
+    DEBUG := true
 
 ; Check if latest version
 if !DEBUG && !update_isLatest()
