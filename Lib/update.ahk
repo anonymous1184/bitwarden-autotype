@@ -17,14 +17,16 @@ update_isLatest()
     if A_IsCompiled
         FileGetVersion current, % A_ScriptFullPath
     else
-        FileRead current, version
+        FileRead current, % A_ScriptDir "\version"
     try
     {
         whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
         whr.Open("GET"
             , "https://raw.githubusercontent.com/anonymous1184/bitwarden-autotype/master/version"
             , false), whr.Send()
-        return (current = RTrim(whr.ResponseText, "``r`n"))
+        online := RTrim(whr.ResponseText, "`r`n")
+        return checkVersion(current, online)
+
     }
     return true ; Error while checking
 }
