@@ -85,6 +85,6 @@ Run % ComSpec " /C " quote("timeout /t 1 & del " quote(A_ScriptFullPath)),, Hide
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\uninstall.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename uninstall.ahk
-;@Ahk2Exe-SetVersion 1.0.0.1
-;@Ahk2Exe-SetProductVersion 1.0.0.1
+;@Ahk2Exe-SetVersion 1.0.1.1
+;@Ahk2Exe-SetProductVersion 1.0.1.1
 ;@Ahk2Exe-UpdateManifest 1
