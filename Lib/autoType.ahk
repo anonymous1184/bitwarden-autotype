@@ -10,7 +10,7 @@ autoType(entry, mode)
         {
             if INI.GENERAL.totp
                 Clipboard := entry.totp
-            TrayTip % appTitle, % "TOTP: " formatOtp(entry.totp), 10, 0x20
+            tip("TOTP: " formatOtp(entry.totp))
         }
     }
 

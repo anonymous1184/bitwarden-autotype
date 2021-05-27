@@ -5,13 +5,11 @@ DetectHiddenWindows On
 
 ; Arguments
 verbose := !quiet := DEBUG := false
-for i,arg in A_Args
-{
-    if arg ~= "i)[-|\/]quiet"
-        verbose := !quiet := true
-    else if arg ~= "i)[-|\/]debug"
-        DEBUG := true
-}
+if A_Args[1] ~= "i)[-|\/]quiet"
+    verbose := !quiet := true
+FileGetVersion version, % A_ScriptFullPath
+if StrSplit(version, ".")[1] > 2020
+    DEBUG := true
 
 ; Check if latest version
 if !DEBUG && !update_isLatest()
@@ -96,15 +94,12 @@ if verbose
 }
 
 ; Progress
-Gui New, +AlwaysOnTop +HwndHwnd +ToolWindow
+Gui New, +AlwaysOnTop +HwndHwnd -SysMenu
 Gui Font, s11 q5, Consolas
 Gui Add, Text,, Getting version...
 Gui Show,, > Download
 Hotkey IfWinActive, % "ahk_id" hWnd
 Hotkey !F4, WinExist
-hMenu := DllCall("User32\GetSystemMenu", "UInt",hWnd, "UInt",0)
-for i,uPosition in { SC_MINIMIZE: 0xF020, SC_CLOSE: 0xF060 }
-    DllCall("User32\DeleteMenu", "UInt",hMenu, "UInt",uPosition, "UInt",0)
 
 ; Latest
 while !latest
@@ -171,6 +166,6 @@ return
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename setup.ahk
-;@Ahk2Exe-SetVersion 1.0.0.1
-;@Ahk2Exe-SetProductVersion 1.0.0.1
+;@Ahk2Exe-SetVersion 1.0.1.1
+;@Ahk2Exe-SetProductVersion 1.0.1.1
 ;@Ahk2Exe-UpdateManifest 1

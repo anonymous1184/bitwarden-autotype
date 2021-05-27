@@ -8,7 +8,7 @@ sync(showTip := false)
     SetTimer bwStatus, -1
     getData()
     if showTip
-        TrayTip % appTitle, Sync complete, 10, 0x20
+        tip("Sync complete")
 }
 
 sync_auto(mins)
