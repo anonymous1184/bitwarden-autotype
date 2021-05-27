@@ -18,7 +18,7 @@ init()
         SetTimer bwStatus, -1 ; Async
     }
 
-    if isLocked
+    if !isLogged || isLocked
         ExitApp 1
 
     ; Decrypt data
