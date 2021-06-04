@@ -36,5 +36,5 @@ tcato_menu()
         IniWrite % " " 1, % settings, TCATO, use
     else
         IniWrite % "", % settings, TCATO, use
-    Menu Tray, % INI.TCATO.use ? "Check" : "UnCheck", 5&
+    Menu sub1, % INI.TCATO.use ? "Check" : "UnCheck", 1&
 }

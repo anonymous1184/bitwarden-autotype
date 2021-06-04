@@ -30,3 +30,12 @@ update_isLatest()
     }
     return true ; Error while checking
 }
+
+update_menu()
+{
+    if INI.GENERAL.updates := !INI.GENERAL.updates
+        IniWrite % " " 1, % settings, GENERAL, updates
+    else
+        IniWrite % "", % settings, GENERAL, updates
+    Menu sub1, % INI.GENERAL.updates ? "Check" : "UnCheck", 3&
+}

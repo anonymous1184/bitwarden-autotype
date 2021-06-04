@@ -12,5 +12,5 @@ autorun()
         RegWrite REG_SZ, % keyDir, % appTitle, % quote(A_ScriptFullPath)
     else
         RegDelete % keyDir, % appTitle
-    Menu Tray, % state ? "Check" : "UnCheck", 6&
+    Menu sub1, % state ? "Check" : "UnCheck", 2&
 }
