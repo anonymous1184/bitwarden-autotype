@@ -13,6 +13,9 @@ findMatch(mode)
         return
     }
 
+    ; High
+    Process Priority,, H
+
     url := ""
     global autoTypeWindow
     hWnd := WinExist("A")
@@ -82,6 +85,9 @@ findMatch(mode)
         MsgBox % 0x10|0x40000, % appTitle, No auto-type match found.
         return
     }
+
+    ; Normal
+    Process Priority,, N
 
     ; Multiple matches
     if total = 1

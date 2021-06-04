@@ -31,7 +31,7 @@ getStdStream(lpCommandLine, oEnvironment := "")
             , "Ptr",0
             , "Ptr",0
             , "Ptr",true
-            , "Ptr",0x08000000 ; CREATE_NO_WINDOW
+            , "Ptr",0x08000000|0x00000080 ; CREATE_NO_WINDOW|HIGH_PRIORITY_CLASS
             , "Ptr",lpEnvironment
             , "Ptr",0
             , "Ptr",&lpStartupInfo
