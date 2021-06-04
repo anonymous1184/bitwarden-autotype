@@ -1,6 +1,10 @@
 ﻿
 findMatch(mode)
 {
+    ; Wait for keys release
+    loop 0xFF ; All of them
+        KeyWait % "vk" Format("{:02X}", A_Index)
+
     if !isLogged && !toggleLogin()
         return
     if isLocked && !toggleLock()

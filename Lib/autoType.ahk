@@ -24,19 +24,6 @@ autoType(entry, mode)
     }
     entry.Delete("tcato") ; To be used as placeholder
 
-    ; Wait for keyUp
-    pressing := true
-    while pressing
-    {
-        pressing := false
-        loop 0xFF
-        {
-            vk := "vk" Format("{:03X}", A_Index)
-            if GetKeyState(vk, "P")
-                pressing := true
-        }
-    }
-
     ; Perform
     BlockInput On ; Only works with UI Access.
     p := 1
