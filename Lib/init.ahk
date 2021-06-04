@@ -17,7 +17,7 @@ init()
     else
     {
         passwd := toggleLogin(false)
-        SetTimer bwStatus, -1 ; Async
+        async("bwStatus")
     }
 
     if !isLogged || isLocked

@@ -5,7 +5,7 @@ sync(showTip := false)
         return
     Menu Tray, Icon, shell32.dll, 239
     bw("sync")
-    SetTimer bwStatus, -1
+    async("bwStatus")
     getData()
     if showTip
         tip("Sync complete")

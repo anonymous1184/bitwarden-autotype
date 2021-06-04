@@ -1,9 +1,7 @@
 ﻿
 toggleLogin(showTip := true)
 {
-    fn := Func("bw").Bind("logout")
-    SetTimer % fn, -1 ; Async
-
+    async("bw", "logout")
     if isLogged
     {
         isLogged := false
@@ -18,10 +16,7 @@ toggleLogin(showTip := true)
     {
         ; Custom login server
         if INI.ADVANCED.server
-        {
-            fn := Func("bw").Bind("config server " INI.ADVANCED.server)
-            SetTimer % fn, -1 ; Async
-        }
+            async("bw", "config server " INI.ADVANCED.server)
         if !passwd := getPassword()
             return
         cmd := "login " INI.CREDENTIALS.user " " passwd
