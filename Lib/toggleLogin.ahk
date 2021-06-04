@@ -17,18 +17,16 @@ toggleLogin(showTip := true)
         ; Custom login server
         if INI.ADVANCED.server
             async("bw", "config server " INI.ADVANCED.server)
+
         if !passwd := getPassword()
             return
-        cmd := "login " INI.CREDENTIALS.user " " passwd
+        cmd := "login " quote(INI.CREDENTIALS.user)
         bw2FA := SubStr(INI.CREDENTIALS.2fa, 1, 1)
         if bw2FA in A,E,Y
         {
             if (bw2FA = "E") ; Trigger email
-            {
-                global bwCli
-                Run % bwCli " " cmd " --method 1",, Hide UseErrorLevel
-            }
-            if (bw2FA = "Y") ; Yubikey methods
+                async("bw", cmd " --passwordenv BW_PASS --method 1 ", passwd)
+            else if (bw2FA = "Y") ; Yubikey tokens
                 InputBox code, % appTitle, YubiKey Code,, 190, 125,,, Locale
             else
             {
@@ -37,11 +35,11 @@ toggleLogin(showTip := true)
                     return
             }
             methods := { "A":0, "E":1, "Y":3 }
-            cmd .= " --method " methods[bw2FA] " --code " code
+            cmd .= " --passwordenv BW_PASS --method " methods[bw2FA] " --code " code
         }
 
         ; Store session information
-        out := bw(cmd)
+        out := bw(cmd, passwd)
         if ErrorLevel
         {
             MsgBox % 0x10|0x40000, % appTitle, % out

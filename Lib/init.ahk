@@ -2,11 +2,6 @@
 init()
 {
     ; Active vault
-    EnvSet BW_RAW, % "true"
-    EnvSet BW_NOINTERACTION, % "true"
-    EnvSet BITWARDENCLI_APPDATA_DIR, % A_WorkingDir
-    if INI.ADVANCED.NODE_EXTRA_CA_CERTS
-        EnvSet NODE_EXTRA_CA_CERTS, % INI.ADVANCED.NODE_EXTRA_CA_CERTS
     isLocked := isLogged := FileOpen("data.json", 0x2).Length > 512
 
     if isLocked
