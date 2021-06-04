@@ -1,13 +1,15 @@
 ﻿
-checkVersion(base, required)
+checkVersion(base, main)
 {
     base := StrSplit(base, ".")
-    required := StrSplit(required, ".")
-    for i,part in required
+    main := StrSplit(main, ".")
+    loop % main.Count()
     {
-        part := Format("{:d}", part)
-        base[i] := Format("{:d}", base[i])
-        if (base[i] < part)
+        nBase := Format("{:d}", base[A_Index])
+        nMain := Format("{:d}", main[A_Index])
+        if (nBase > nMain)
+            return true
+        if (nBase < nMain)
             return false
     }
     return true

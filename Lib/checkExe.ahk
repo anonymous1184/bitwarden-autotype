@@ -8,7 +8,7 @@ checkExe(path, version := "")
         return "not an executable"
 
     FileGetVersion exeVersion, % path
-    if !version
+    if !exeVersion
         return "couldn't get version"
 
     if !checkVersion(exeVersion, version)

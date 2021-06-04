@@ -58,8 +58,8 @@ SetWorkingDir % cwd
 ; Bitwarden CLI path
 bwCli := A_WorkingDir "\bw.exe"
 if !FileExist(bwCli)
-if err := checkExe(bwCli, "1.11.0")
     bwCli := INI.ADVANCED.bw
+if err := checkExe(bwCli, 1.11)
 {
     MsgBox % 0x10|0x40000, % appTitle, % "Bitwarden CLI: " err
     ExitApp 1
