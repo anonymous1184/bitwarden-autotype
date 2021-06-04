@@ -28,6 +28,9 @@ if StrSplit(version, ".")[1] > 2020
 }
 */
 
+; Set a global variable while debugging
+global DEBUG := InStr(DllCall("Kernel32\GetCommandLine", "Str"), "debug")
+
 ; Settings
 SplitPath A_ScriptFullPath,, dir,, name
 for i,file in [A_AppData "\Auto-Type\settings.ini", dir "\" name ".ini", dir "\dev\.ini"]
@@ -44,7 +47,7 @@ if !settings
 global INI := loadIni(settings)
 
 ; Error report
-OnError("errorReport")
+OnError("errorReport", !DEBUG)
 
 ; Updates at startup
 opt := INI.GENERAL.updates
