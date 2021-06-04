@@ -1,7 +1,9 @@
 ﻿
 toggleLogin(showTip := true)
 {
-    FileOpen("data.json", 0x1)
+    fn := Func("bw").Bind("logout")
+    SetTimer % fn, -1 ; Async
+
     if isLogged
     {
         isLogged := false
@@ -14,6 +16,12 @@ toggleLogin(showTip := true)
     }
     else
     {
+        ; Custom login server
+        if INI.ADVANCED.server
+        {
+            fn := Func("bw").Bind("config server " INI.ADVANCED.server)
+            SetTimer % fn, -1 ; Async
+        }
         if !passwd := getPassword()
             return
         cmd := "login " INI.CREDENTIALS.user " " passwd
