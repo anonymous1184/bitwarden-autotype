@@ -126,7 +126,7 @@ FileDelete % tmpZipFile
 
 ; Open Settings
 Settings:
-    MsgBox % 0x40|0x40000, Complete!, Installation complete`, please update the seatings accordingly.
+    MsgBox % 0x40|0x40000, Complete!, Installation complete`, please update the settings accordingly.
     Run edit settings.ini, % A_AppData "\Auto-Type", UseErrorLevel, settingsPid
     WinWait % "ahk_pid" settingsPid
     WinActivate % "ahk_pid" settingsPid
