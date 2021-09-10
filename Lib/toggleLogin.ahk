@@ -1,11 +1,11 @@
 ﻿
 toggleLogin(showTip := true)
 {
-    async("bw", "logout")
     if isLogged
     {
         isLogged := false
         tip("Logged out")
+        async("bw", "logout")
         ; Update Menu
         Menu Tray, Disable, 1&
         Menu Tray, Disable, 2&
