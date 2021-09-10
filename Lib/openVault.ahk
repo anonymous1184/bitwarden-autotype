@@ -1,5 +1,7 @@
 ﻿
 openVault()
 {
-    Run https://vault.bitwarden.com/,, UseErrorLevel
+    Run % "https://"
+            . INI.ADVANCED.server ? INI.ADVANCED.server : "vault.bitwarden.com"
+        ,, UseErrorLevel
 }
