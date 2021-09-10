@@ -38,7 +38,7 @@ if verbose
 ; Execute from %Temp%
 if !InStr(A_ScriptFullPath, A_Temp)
 {
-    tmp := A_Temp "\" A_Now ".exe"
+    tmp := A_Temp "\bw-at-uninstall.exe"
     FileCopy % A_ScriptFullPath, % tmp, % true
     Run % tmp " /quiet /s:" settings
     ExitApp
