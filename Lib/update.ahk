@@ -14,20 +14,18 @@ update()
 
 update_isLatest()
 {
+    url := "https://raw.githubusercontent.com/anonymous1184/bitwarden-autotype/master/version"
+    if !DllCall("Wininet\InternetCheckConnection", "Str",url, "Ptr",1, "Ptr",0)
+        return true
     if A_IsCompiled
         FileGetVersion current, % A_ScriptFullPath
     else
         FileRead current, % A_ScriptDir "\version"
-    try
-    {
-        whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-        whr.Open("GET"
-            , "https://raw.githubusercontent.com/anonymous1184/bitwarden-autotype/master/version"
-            , false), whr.Send()
-        online := RTrim(whr.ResponseText, "`r`n")
+    UrlDownloadToFile % url, % A_Temp "\version"
+    FileRead buffer, % A_Temp "\version"
+    FileDelete, % A_Temp "\version"
+    if online := RTrim(buffer, "`r`n")
         return checkVersion(current, online)
-
-    }
     return true ; Error while checking
 }
 

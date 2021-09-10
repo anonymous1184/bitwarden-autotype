@@ -133,10 +133,10 @@ Settings:
 ExitApp
 
 Preload:
-    whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-    url := "https://api.github.com/repos/bitwarden/cli/releases/latest"
-    whr.Open("GET", url, false), whr.Send()
-    latest := JSON.Load(whr.ResponseText)
+    UrlDownloadToFile https://api.github.com/repos/bitwarden/cli/releases/latest, % A_Temp "\bw-releases.json"
+    FileRead buffer, % A_Temp "\bw-releases.json"
+    latest := JSON.Load(buffer)
+    FileDelete % A_Temp "\bw-releases.json"
     for i,asset in latest.assets
         if InStr(asset.name, "windows")
             break
