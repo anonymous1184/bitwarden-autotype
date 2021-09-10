@@ -60,7 +60,7 @@ for i,dir in dirs
 }
 FileDelete % A_DesktopCommon "\Auto-Type.lnk"
 
-signExe_DeleteCert("Auto-Type")
+Run PowerShell -Command "Get-ChildItem Cert:\LocalMachine\*\* | Where-Object {$_.Subject -eq 'CN=Auto-Type'} | Remove-Item",, Hide
 RegDelete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Auto-Type
 RegDelete HKCU\Software\Microsoft\Windows\CurrentVersion\Run, Bitwarden Auto-Type
 

@@ -72,9 +72,22 @@ RegWrite REG_SZ, % key, QuietUninstallString, % quote(A_ProgramFiles "\Auto-Type
 RegWrite REG_SZ, % key, UninstallString     , % quote(A_ProgramFiles "\Auto-Type\uninstall.exe")
 RegWrite REG_SZ, % key, URLInfoAbout        , https://github.com/anonymous1184/bitwarden-autotype/
 
-; Signatures
-signExe(A_ProgramFiles "\Auto-Type\bw-at.exe", "Auto-Type", true)
-signExe(A_ProgramFiles "\Auto-Type\uninstall.exe", "Auto-Type")
+; Signature
+ps1 =
+(
+if (!($cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -eq "CN=Auto-Type" })) {
+    $cert = New-SelfSignedCertificate -CertStoreLocation cert:\LocalMachine\My -HashAlgorithm SHA256 -NotAfter (Get-Date).AddMonths(120) -Subject Auto-Type -Type CodeSigning
+    foreach ($i in @('TrustedPublisher', 'Root')) {
+        $store = [System.Security.Cryptography.X509Certificates.X509Store]::new($i, 'LocalMachine')
+        $store.Open('ReadWrite')
+        $store.Add($cert)
+        $store.Close()
+    }
+}
+Set-AuthenticodeSignature -Certificate $cert -FilePath "%A_ProgramFiles%\Auto-Type\bw-at.exe" -HashAlgorithm SHA256 -TimeStampServer http://timestamp.sectigo.com
+)
+FileOpen(A_Temp "\bw-at.ps1", 0x1).Write(ps1)
+Run PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1, % A_Temp, Hide, psPid
 
 ; Start Menu
 FileCreateDir % start := A_AppDataCommon "\Microsoft\Windows\Start Menu\Programs\Auto-Type"
