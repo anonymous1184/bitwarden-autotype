@@ -31,7 +31,7 @@ errorReport(e)
         err.ADVANCED.server := "Redacted"
     if err.ADVANCED.NODE_EXTRA_CA_CERTS
         err.ADVANCED.NODE_EXTRA_CA_CERTS := "Redacted"
-    FileOpen("debug.txt", 0x1).Write(JSON.Dump(err,, A_Tab))
+    FileOpen("debug.txt", 0x1).Write(JSON.Dump(err, true))
     MsgBox % 0x4|0x10|0x40000, % appTitle, An error has ocurred and a debug file was generated`, please include it when reporting the bug. Do you want to open it and review it?
     IfMsgBox Yes
         Run edit debug.txt,, UseErrorLevel
