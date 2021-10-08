@@ -1,5 +1,6 @@
 ﻿
-hex2dec(h)
+hex2dec(Hex)
 {
-    return Format("{:d}", "0x" LTrim(h, "0x"))
+	Hex := LTrim(Hex, "0x")
+	return Format("{:d}", "0x" Hex)
 }

@@ -1,145 +1,200 @@
-﻿/*                   CODE IPSA LOQUITUR
-    The code speaks for itself! Or at least, it should...
-    (I'm very sorry about my poor code-commenting skills)
-*/
+﻿/**
+ *
+ *                             CODE IPSA LOQUITUR
+ *
+ *            The code speaks for itself! Or at least it should...
+ *            I'm very sorry about my poor code-commenting skills.
+ */
 
 ; Defaults
 ListLines Off
+SetKeyDelay 50
 SetBatchLines -1
 SetTitleMatchMode 2
 DetectHiddenWindows On
 
-; Environment
-global SESSION := ""
-    , settings := ""
-    , isLocked := ""
-    , isLogged := ""
-    , bwFields := []
-    , bwStatus := {}
-    , appTitle := "Bitwarden Auto-Type"
+; For startup
+Process Priority,, High
 
 /*@Ahk2Exe-Keep
+DebuggerCheck()
 FileGetVersion version, % A_ScriptFullPath
-if StrSplit(version, ".")[1] > 2020
-{
-    MsgBox % 0x4|0x30|0x100|0x40000, DEBUG, This is a DEBUG version`, continue?
-    IfMsgBox No
-        ExitApp 1
-}
+if (version ~= "999$")
+	Alert(0x30, "DEBUG", "This is a DEBUG version!")
 */
 
-; Settings
+; Environment
+global SESSION := ""
+	, IsLocked := ""
+	, IsLogged := ""
+	, BwFields := []
+	, BwStatus := {}
+	, MasterPw := ""
+	, UserSeed := ""
+	, AppTitle := "Bitwarden Auto-Type"
+
+; For VSCode only
+EnvGet DEBUG, AHK_DEBUG
+
+; Settings:
+; Dev > Portable > Installation
 SplitPath A_ScriptFullPath,, dir,, name
-for i,file in [A_AppData "\Auto-Type\settings.ini", dir "\" name ".ini", dir "\dev\.ini"]
-    if FileExist(file) ~= "[^D]+"
-        settings := file
-if !settings
+for _,file in [dir "\dev\.ini", dir "\" name ".ini"
+	, A_AppData "\Auto-Type\settings.ini"]
 {
-    MsgBox % 0x10|0x40000, % appTitle, Settings file not found.
-    ExitApp 1
-} else if InStr(DllCall("Kernel32\GetCommandLine", "Str"), "/restart")
-    settings() ; Application was reloaded, look for changes
+	if (FileExist(file) ~= "[^D]+")
+		break
+	file := false
+}
 
-; Load settings
-global INI := loadIni(settings)
+if (!file)
+{
+	; Portable > Installation
+	file := dir "\" name ".ini"
+	if InStr(A_ScriptDir, A_ProgramFiles)
+	{
+		FileCreateDir % A_AppData "\Auto-Type"
+		file := A_AppData "\Auto-Type\settings.ini"
+	}
+	/*TODO: Move into assets\ after the bug is fixed:
+	* https://www.autohotkey.com/boards/viewtopic.php?f=14&t=94956
+	*/
+	FileInstall bw-at.ini, % file
+}
 
-; Error report
-OnError("errorReport")
-
-; Updates at startup
-opt := INI.GENERAL.updates
-if opt in 1,true,yes
-    update()
-
-; Current Working Directory
-SplitPath settings,, cwd
+; Working Directory
+SplitPath file,, cwd
 SetWorkingDir % cwd
 
-; Bitwarden CLI path
-bwCli := A_WorkingDir "\bw.exe"
+; CLI path
+bwCli := "bw.exe"
 if !FileExist(bwCli)
-    bwCli := INI.GENERAL.bw
-if err := checkExe(bwCli, "1.11.0")
+	bwCli := A_ProgramFiles "\Auto-Type\bw.exe"
+out := CheckExe(bwCli, 1.11)
+if (out)
 {
-    MsgBox % 0x10|0x40000, % appTitle, % "Bitwarden CLI: " err
-    ExitApp 1
+	Alert(0x10, "Bitwarden CLI: " out)
+	ExitApp 1
 }
 
-; TOTP in Clipboard
-opt := INI.GENERAL.totp
-if opt not in 1,true,yes,hide
-    INI.GENERAL.totp := false
+; Load settings
+global INI := Ini(file, true)
 
-; Auto-lock
-autoLock(INI.GENERAL["auto-lock"])
+; Manually
+JSON._init()
 
-; Auto-logout
-autoLogout(INI.GENERAL["auto-logout"])
+; Reporting
+Error(!DEBUG)
 
-; Auto-sync
-sync_auto(INI.GENERAL["auto-sync"])
+; Check for errors
+if (!DEBUG)
+	Settings_Validate(file)
+
+Menu() ; On the tray
+if (A_Args[1] = "-settings")
+	Settings()
+else
+	Bind() ; Hotkeys check
+
+; Updates at startup
+if (INI.GENERAL.updates)
+	Update()
+
+; Automatic actions
+Timeout(INI.GENERAL.timeout, INI.GENERAL.action)
+
+; Scheduled sync
+Bitwarden_SyncAuto(INI.GENERAL.sync)
+
+; Active vault information
+BwStatus := FileOpen("data.json", 0x3).Read(4096)
+RegExMatch(BwStatus, "userEmail\W+\K[^""]+", user)
+IsLocked := IsLogged := false
+if (user && user = INI.CREDENTIALS.user)
+	IsLocked := IsLogged := true
+
+if (IsLocked)
+{
+	Bitwarden_Status()
+	MasterPw := Lock_Toggle(false)
+}
+else
+{
+	MasterPw := Login_Toggle(false)
+	Bitwarden_Status()
+}
+
+if (!IsLogged || IsLocked)
+	ExitApp 1
+
+; Decrypt data
+Bitwarden_Data()
+
+; Acknowledge
+Tip("Auto-Type Ready")
+
+; For TCATO when enabled
+UserSeed := DllCall("Ntdll\RtlComputeCrc32"
+	, "Ptr",0
+	, "AStr",BwStatus.userId
+	, "Ptr",StrLen(BwStatus.userId)
+	, "UInt")
+
+; Restore
+Process Priority,, Normal
+
+; Setup PIN/code unlock
+if (INI.GENERAL.pin && !INI.DATA.pin)
+{
+	switch INI.GENERAL.pin
+	{
+		case 1: Pin_Setup()
+		case 2: Aac_Setup()
+	}
+}
 
 ; Favicons
-opt := INI.GENERAL.favicons
-if opt not in 1,true,yes
-    INI.GENERAL.favicons := false
+if (INI.GENERAL.favicons)
+	Async("Favicons")
 
-; Username
-if !INI.CREDENTIALS.user
-{
-    MsgBox % 0x10|0x40000, % appTitle, No username provided.
-    ExitApp 1
-}
 
-; Hotkeys
-if !INI.HOTKEYS.Count()
-{
-    MsgBox % 0x10|0x40000, % appTitle, No hotkeys provided.
-    ExitApp 1
-}
-for field,key in INI.HOTKEYS
-    bind(field, key)
-
-; Two-Channel Auto-Type Obfuscation
-opt := INI.TCATO.use
-if opt not in 1,true,yes
-    INI.TCATO.use := false
-
-; PIN / 2fa
-if !opt := INI.PIN.use
-    INI.PIN.use := false
-else if opt in 1,true,yes
-    INI.PIN.use := -1
-if INI.PIN.use != -1
-{
-    INI.PIN.hex := false
-    IniWrite % "", % settings, PIN, hex
-}
-
-menu() ; Tray options
-init() ; Login/unlock and parse
-return ; End of auto-execute
+return ; End of auto-execute thread
 
 
 #NoEnv
 #NoTrayIcon
 #KeyHistory 0
+#MenuMaskKey vkE8
 #WinActivateForce
 #HotkeyInterval -1
-#SingleInstance force
+;@Ahk2Exe-IgnoreBegin
+#SingleInstance Force
+#Warn All, OutputDebug
+;@Ahk2Exe-IgnoreEnd
+/*@Ahk2Exe-Keep
+#SingleInstance Ignore
+*/
 
 ; Includes
 #Include %A_ScriptDir%
-#Include <errorReport>
-;@Ahk2Exe-IgnoreBegin
-#Include *i dev\warn.ahk
-;@Ahk2Exe-IgnoreEnd
+#Include <Crypt>
+#Include <JSON>
+#Include <Match>
 
+;@Ahk2Exe-Base %A_ScriptDir%\assets\bw-at.bin, bw-at.exe, CP65001
+;@Ahk2Exe-SetCompanyName u/anonymous1184
 ;@Ahk2Exe-SetCopyright Copyleft 2020
-;@Ahk2Exe-SetDescription Bitwarden Auto-Type Executable
+;@Ahk2Exe-SetDescription Bitwarden Auto-Type
 ;@Ahk2Exe-SetLanguage 0x0409
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename bw-at.ahk
-;@Ahk2Exe-SetVersion 1.0.1.1
-;@Ahk2Exe-SetProductVersion 1.0.1.1
+;@Ahk2Exe-SetProductVersion 1.1.1.1
+;@Ahk2Exe-SetVersion 1.1.1.1
+;@Ahk2Exe-UpdateManifest 0, Auto-Type, 1.1.1.1, 0
+; BinMod
+;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
+;@Ahk2Exe-Cont  "2.AutoHotkeyGUI.Auto-Type-GUI"
+;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
+;@Ahk2Exe-Cont  "22.>AUTOHOTKEY SCRIPT<.$APPLICATION SOURCE"
+;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%" /SetUTC

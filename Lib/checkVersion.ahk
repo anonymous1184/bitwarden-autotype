@@ -1,14 +1,15 @@
 ﻿
-checkVersion(base, required)
+CheckVersion(Current, Minimal)
 {
-    base := StrSplit(base, ".")
-    required := StrSplit(required, ".")
-    for i,part in required
-    {
-        part := Format("{:d}", part)
-        base[i] := Format("{:d}", base[i])
-        if (base[i] < part)
-            return false
-    }
-    return true
+	Current := StrSplit(Current, ".")
+	Minimal := StrSplit(Minimal, ".")
+	loop % Minimal.Count()
+	{
+		c := Format("{:d}", Current[A_Index])
+		m := Format("{:d}", Minimal[A_Index])
+		if (c = m)
+			continue
+		return (c > m)
+	}
+	return true
 }

@@ -1,5 +1,5 @@
 ﻿
-quote(str)
+Quote(str)
 {
-    return """" str """"
+	return """" str """"
 }

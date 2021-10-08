@@ -1,32 +1,41 @@
 ﻿
-menu()
+Menu()
 {
-    ; Tray menu
-    Menu Tray, Icon
-    Menu Tray, Icon, shell32.dll, 48
-    Menu Tray, NoStandard
-    Menu Tray, Tip, % appTitle " (Loading...)"
-    Menu Tray, Add, &Sync , sync        ; 1
-    Menu Tray, Add, &Lock , toggleLock  ; 2
-    Menu Tray, Add, Log&in, toggleLogin ; 3
-    Menu Tray, Add
-    Menu Tray, Add, &TCATO     , tcato_menu ; 5
-    Menu Tray, Add, &Autorun   , autorun    ; 6
-    Menu Tray, Add, &Settings  , settings
-    Menu Tray, Add, &Generator , generator
-    Menu Tray, Add, &Open Vault, openVault
-    Menu Tray, Add
-    Menu Tray, Add, &Exit, menuExit
-    Menu Tray, Disable, 1&
-    Menu Tray, Disable, 2&
-    if INI.TCATO.use
-        Menu Tray, Check, 5&
-    if autorun()
-        Menu Tray, Check, 6&
+	; Settings sub-menu
+	Menu sub1, Add, &Open, Settings ;-------------------- 1
+	Menu sub1, Add
+	Menu sub1, Add, &Autorun, Autorun ;------------------ 3
+	Menu sub1, Add, &Authenticator codes, Totp_toggle ;-- 4
+	Menu sub1, Add, Auto-&Type Obfuscation, Tcato_Menu ;- 5
+
+	; Tray menu
+	Menu Tray, Icon
+	Menu Tray, Icon, shell32.dll, 48
+	Menu Tray, NoStandard
+	Menu Tray, Tip, % AppTitle " (Loading...)"
+	Menu Tray, Add, &Sync, Bitwarden_Sync ;- 1
+	Menu Tray, Add, &Lock, Lock_Toggle ;---- 2
+	Menu Tray, Add, Log&in, Login_Toggle ;-- 3
+	Menu Tray, Add
+	Menu Tray, Add, &Generator, Generator
+	Menu Tray, Add, &Open Vault, OpenVault
+	Menu Tray, Add, &Settings, :sub1 ;------ 7
+	Menu Tray, Add
+	Menu Tray, Add, &Exit, ExitApp
+
+	Menu Tray, Disable, 1&
+	Menu Tray, Disable, 2&
+	Menu Tray, Disable, 7&
+
+	if Autorun_Get()
+		Menu sub1, Check, 3&
+	if (INI.GENERAL.totp)
+		Menu sub1, Check, 4&
+	if (INI.GENERAL.tcato)
+		Menu sub1, Check, 5&
 }
 
-#Include <generator>
-#Include <menuExit>
-#Include <openVault>
-#Include <settings>
-#Include <sync>
+#Include <ExitApp>
+#Include <Generator>
+#Include <OpenVault>
+#Include <Tcato>

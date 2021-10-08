@@ -5,3 +5,6 @@ release
 
 # Types
 *.code-workspace
+
+# Files
+assets/BinMod.exe
