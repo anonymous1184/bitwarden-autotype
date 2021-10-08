@@ -8,12 +8,50 @@ YYYY/MM/DD - MAJOR.MINOR.RELEASE
 [!] = Fix / Security
 
 
+2021/10/08 - 1.1.1
+——————————————————
+[!] Speed improvements
+[!] Password is now hidden in the command line
+[!] Session key is now only set on bw.exe
+[!] Fixed installer issues with Windows 7 and 11
+[!] Fixed an edge case in the password generator
+[!] Application closes on debugger detection
+[!] Top-Level Domains are now properly validated
+[!] Reduced to only one false-positive in Virus Total
+[+] Login and settings UI
+[+] Windows 11 compatibility
+[+] Full information on Windows Uninstaller Applet
+[+] Redundancy checks on the installer for easier updates
+[+] BW CLI start menu shortcut
+[+] On-premises Hosting support
+[+] cURL is used if available in the path
+[+] Ability to lock windows on timeout
+[+] Support for items with password reprompt
+[+] Build script includes BinMod
+[*] Extensive code refactoring aimed to ease audit.
+[*] Signatures via PowerShell
+[*] Simplified settings.ini
+[*] Security information on README
+[*] More comprehensive uninstaller
+[*] Authenticator unlock uses its own key/secret
+[*] Differentiation when using Email/Authenticator codes and Pin
+[*] Pin length can be customized
+[*] Improved hotkey detection when auto-typing
+[^] Settings in a sub-menu
+[^] Typing speed matches KeePass
+[^] JSON is handled by a different library
+[^] Build options embedded within the source
+[^] AutoHotkey version 1.1.33.10
+[=] Bitwarden CLI version >= 1.11.0
+
+
 2021/05/27 - 1.0.1
 ——————————————————
 [!] Sync icon when logged out
 [+] Reduced memory footprint
 [*] Minor code refactoring
 [*] Better settings change detection
+[=] Bitwarden CLI version >= 1.11.0
 
 
 2021/05/21 - 1.0.0
