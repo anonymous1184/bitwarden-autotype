@@ -1,16 +1,17 @@
 ﻿
-checkExe(path, version := "")
+CheckExe(Path, Version := "")
 {
-    if !attribs := FileExist(path)
-        return "file not found"
+	attribs := FileExist(Path)
+	if (!attribs)
+		return "file not found"
 
-    if InStr(attribs, "D") || SubStr(path, -3) != ".exe"
-        return "not an executable"
+	if (InStr(attribs, "D") || SubStr(Path, -3) != ".exe")
+		return "not an executable"
 
-    FileGetVersion exeVersion, % path
-    if !exeVersion
-        return "couldn't get version"
+	FileGetVersion exeVersion, % Path
+	if (!exeVersion)
+		return "couldn't get version"
 
-    if !checkVersion(exeVersion, version)
-        return "incompatible version"
+	if !CheckVersion(exeVersion, Version)
+		return "incompatible version"
 }

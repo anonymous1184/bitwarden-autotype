@@ -2,39 +2,37 @@
 ; Two-Channel Auto-Type Obfuscation
 ; https://keepass.info/help/v2/autotype_obfuscation.html
 
-tcato(str, seed := 0, wait := 500, kps := 10)
+Tcato(str, seed := 0, wait := 250, ksps := 10)
 {
-    sendPart := []
-    clipPart := ""
-    Clipboard := ""
-    Random ,, % seed
-    loop parse, str
-    {
-        Random rnd, 0, 1
-        if rnd
-            clipPart .= A_LoopField
-        else
-            sendPart[A_Index] := A_LoopField
-    }
-    Clipboard := clipPart
-    ClipWait
-    Send ^v
-    Sleep % wait
-    Clipboard := ""
-    Send % "{Left " StrLen(clipPart) "}"
-    SetKeyDelay % 1000 / kps
-    loop parse, str
-    {
-        chr := sendPart[A_Index]
-        Send % StrLen(chr) ? "{Raw}" chr : "{Right}"
-    }
+	clipPart := ""
+	sendPart := []
+	clipBack := ClipboardAll
+	Clipboard := ""
+	Random ,, % Format("{:d}", seed)
+	loop parse, str
+	{
+		Random rnd, 0, 1
+		if (rnd)
+			clipPart .= A_LoopField
+		else
+			sendPart[A_Index] := A_LoopField
+	}
+	Clipboard := clipPart
+	ClipWait
+	Send ^v
+	Sleep % wait
+	Clipboard := clipBack
+	SendInput % "{Left " StrLen(clipPart) "}"
+	loop parse, str
+	{
+		Sleep % 1000 / ksps
+		chr := sendPart[A_Index]
+		SendInput % StrLen(chr) ? "{Text}" chr : "{Right}"
+	}
 }
 
-tcato_menu()
+Tcato_Menu()
 {
-    if INI.TCATO.use := !INI.TCATO.use
-        IniWrite % " " 1, % settings, TCATO, use
-    else
-        IniWrite % "", % settings, TCATO, use
-    Menu sub1, % INI.TCATO.use ? "Check" : "UnCheck", 1&
+	INI.GENERAL.tcato := !INI.GENERAL.tcato
+	Menu sub1, ToggleCheck, 5&
 }

@@ -3,88 +3,136 @@ ListLines Off
 SetBatchLines -1
 DetectHiddenWindows On
 
-; Level
-if A_Args[1] ~= "i)[-|\/]quiet"
-    verbose := !quiet := true
+; Arguments
+verbose := !quiet := false
+if (A_Args[1] ~= "i)-quiet")
+	verbose := !quiet := true
 
-if verbose
+if (verbose)
 {
-    SetTimer retry2yes, 1
-    MsgBox % 0x5|0x30|0x40000, Uninstall?, Do you want to uninstall Bitwarden Auto-Type?
-    IfMsgBox Cancel
-        ExitApp
+	Alert_Labels("", "&Exit")
+	Alert(0x134, "Uninstall?", "Do you want to uninstall Bitwarden Auto-Type?")
+	IfMsgBox No ; Relabeled as `Exit`
+		ExitApp
 }
 
-while WinExist("ahk_exe bw-at.exe")
+if WinExist("ahk_exe bw-at.exe")
 {
-    if verbose
-    {
-        SetTimer retry2yes, 1
-        MsgBox % 0x5|0x20|0x40000, Close?, Application is running`, close it before continuing?
-        IfMsgBox Cancel
-            ExitApp
-    }
-    RunWait taskkill /F /IM bw-at.exe /T,, Hide UseErrorLevel
+	if (verbose)
+	{
+		Alert_Labels("", "&Exit")
+		Alert(0x24, "Close running instance?", "The application is currently running, close it before continuing?")
+		IfMsgBox No ; Relabeled as `Exit`
+			ExitApp
+	}
+	WinKill ahk_exe bw-at.exe
 }
 
-settings := 1
-if verbose
+remove := 1
+if (verbose)
 {
-    MsgBox % 0x4|0x20|0x40000, Remove?, Do you want to remove the stored settings?
-    IfMsgBox No
-        settings := 0
+	Alert(0x24, "Remove?", "Do you want to remove the stored Settings?")
+	IfMsgBox No
+		remove := 0
 }
 
-; Execute from %Temp%
-if !InStr(A_ScriptFullPath, A_Temp)
+; Execute from %TEMP%
+if (A_IsCompiled && !InStr(A_ScriptDir, A_Temp))
 {
-    tmp := A_Temp "\bw-at-uninstall.exe"
-    FileCopy % A_ScriptFullPath, % tmp, % true
-    Run % tmp " /quiet /s:" settings
-    ExitApp
+	tmp := A_Temp "\bw-at-uninstall.tmp"
+	FileCopy % A_ScriptFullPath, % tmp, % true
+	Run % tmp " -quiet:" remove
+	ExitApp
 }
 
-; Folders to remove
-dirs := [ A_AppData "\Auto-Type"
-    , A_ProgramFiles "\Auto-Type"
-    , A_AppDataCommon "\Microsoft\Windows\Start Menu\Programs\Auto-Type"]
-
-if A_Args[2] ~= "s:0"
-    dirs.RemoveAt(1)
-
-for i,dir in dirs
+; User settings
+if (A_Args[1] ~= ":1")
 {
-    FileRemoveDir % dir, % true
-    if ErrorLevel
-        DllCall("Kernel32\MoveFileEx", "Str",dir, "Int",0, "UInt",0x4)
+	EnvGet public, PUBLIC
+	loop files, % public "\..\*", D
+	{
+		dir := A_LoopFileLongPath "\AppData\Roaming\Auto-Type"
+		FileRemoveDir % dir, % true
+	}
 }
+
+; Application and start menu
+for i,dir in [ A_ProgramFiles "\Auto-Type"
+	, A_AppDataCommon "\Microsoft\Windows\Start Menu\Programs\Auto-Type"]
+{
+	FileRemoveDir % dir, % true
+	if (ErrorLevel)
+		DllCall("Kernel32\MoveFileEx", "Str",dir, "Ptr",0, "UInt",0x4)
+}
+
+; Desktop shortcut
 FileDelete % A_DesktopCommon "\Auto-Type.lnk"
 
-Run PowerShell -Command "Get-ChildItem Cert:\LocalMachine\*\* | Where-Object {$_.Subject -eq 'CN=Auto-Type'} | Remove-Item",, Hide
-RegDelete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Auto-Type
-RegDelete HKCU\Software\Microsoft\Windows\CurrentVersion\Run, Bitwarden Auto-Type
+; Autorun
+users := []
+loop reg, HKU, K
+	users.Push(A_LoopRegName)
+for i,user in users
+{
+	RegDelete % "HKU\" user "\Software\Microsoft\Windows\CurrentVersion\Run"
+		, Bitwarden Auto-Type
+}
 
-MsgBox % 0x40|0x40000, Success!, Bitwarden Auto-Type has been successfully uninstalled.
-Run % ComSpec " /C " quote("timeout /t 1 & del " quote(A_ScriptFullPath)),, Hide
+; Uninstall info
+RegDelete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Auto-Type
+
+; Self-signed certificate
+Run PowerShell -Command "Get-ChildItem Cert:\LocalMachine\*\* | Where-Object"
+	. " {$_.Subject -eq 'CN=Auto-Type'} | Remove-Item",, Hide
+
+; Acknowledge
+Alert(0x40, "Complete!", "Bitwarden Auto-Type has been uninstalled.")
+
+; Self-destruct
+if (A_IsCompiled)
+{
+	Run % A_ComSpec " /C " Quote("timeout /t 1 & del "
+		. Quote(A_ScriptFullPath)),, Hide ErrorLevel
+	if (ErrorLevel)
+	{
+		DllCall("Kernel32\MoveFileEx"
+			, "Str",A_ScriptFullPath
+			, "Ptr",0
+			, "UInt",0x4)
+	}
+}
+
+
+ExitApp
+
 
 #NoEnv
 #NoTrayIcon
 #KeyHistory 0
-#SingleInstance force
+;@Ahk2Exe-IgnoreBegin
+#SingleInstance Force
+#Warn All, OutputDebug
+;@Ahk2Exe-IgnoreEnd
+/*@Ahk2Exe-Keep
+#SingleInstance Ignore
+*/
 
 ; Includes
 #Include %A_ScriptDir%
-;@Ahk2Exe-IgnoreBegin
-#Include *i dev\warn.ahk
-;@Ahk2Exe-IgnoreEnd
-#Include <retry2yes>
 
+
+;@Ahk2Exe-Base %A_ScriptDir%\assets\bw-at.bin, uninstall.exe, CP65001
+;@Ahk2Exe-SetCompanyName u/anonymous1184
 ;@Ahk2Exe-SetCopyright Copyleft 2020
 ;@Ahk2Exe-SetDescription Bitwarden Auto-Type Uninstaller
 ;@Ahk2Exe-SetLanguage 0x0409
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\uninstall.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename uninstall.ahk
-;@Ahk2Exe-SetVersion 1.0.1.1
 ;@Ahk2Exe-SetProductVersion 1.0.1.1
-;@Ahk2Exe-UpdateManifest 1
+;@Ahk2Exe-SetVersion 1.0.1.1
+;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.0.1.1, 0
+; BinMod
+;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
+;@Ahk2Exe-Cont  "22.>AUTOHOTKEY SCRIPT<.$APPLICATION SOURCE"
+;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%" /SetUTC

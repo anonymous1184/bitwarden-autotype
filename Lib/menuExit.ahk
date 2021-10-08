@@ -1,5 +1,0 @@
-﻿
-menuExit()
-{
-    ExitApp
-}

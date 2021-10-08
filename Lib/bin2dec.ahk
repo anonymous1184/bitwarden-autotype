@@ -1,9 +1,9 @@
 ﻿
-bin2dec(n)
+bin2dec(Num)
 {
-    r := 0
-    , b := StrLen(n)
-    loop parse, n
-        r |= A_LoopField << --b
-    return r
+	out := 0
+	len := StrLen(Num)
+	loop parse, Num
+		out |= A_LoopField << --len
+	return out
 }

@@ -1,8 +1,8 @@
 ﻿
-async(fn, args*)
+Async(Function, Parameters*)
 {
-    ref := Func(fn)
-    if args.Count()
-        ref := ref.Bind(args*)
-    SetTimer % ref, -1
+	ref := Func(Function)
+	if Parameters.Count()
+		ref := ref.Bind(Parameters*)
+	SetTimer % ref, -1
 }

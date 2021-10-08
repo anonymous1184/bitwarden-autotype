@@ -1,9 +1,11 @@
 ﻿
-dec2bin(n)
+dec2bin(Num)
 {
-    r := ""
-    while n
-        r := 1 & n r
-        , n >>= 1
-    return r
+	out := ""
+	while Num
+	{
+		out := (1 & Num) out
+		Num >>= 1
+	}
+	return out
 }

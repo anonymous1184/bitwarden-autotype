@@ -1,10 +1,10 @@
 ﻿
-latestFirefox()
+LatestFirefox()
 {
-    UrlDownloadToFile https://formulae.brew.sh/api/cask/firefox.json, % A_Temp "\json"
-    FileRead json, % A_Temp "\json"
-    FileDelete, % A_Temp "\json"
-    if !RegExMatch(json, "(?<=version.:.)[\d\.]+", version)
-        version := "88.0.1" ; May, 2021
-    return version
+	UrlDownloadToFile https://www.mozilla.org/en-US/, % A_Temp "\bw-at-ff"
+	FileRead html, % "*m4096 " A_Temp "\bw-at-ff" ; Only 4kb
+	FileDelete % A_Temp "\bw-at-ff"
+	if !RegExMatch(html, "firefox=.\K[\d\.]+", version)
+		version := "92.0.1" ; October 2021
+	return version
 }

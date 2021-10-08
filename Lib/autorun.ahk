@@ -1,16 +1,21 @@
 ﻿
-autorun()
+Autorun()
 {
-    static state := -1
-        , keyDir := "HKCU\Software\Microsoft\Windows\CurrentVersion\Run"
-    if state = -1
-    {
-        RegRead state, % keyDir, % appTitle
-        return state := !!state
-    }
-    if state ^= 1
-        RegWrite REG_SZ, % keyDir, % appTitle, % quote(A_ScriptFullPath)
-    else
-        RegDelete % keyDir, % appTitle
-    Menu sub1, % state ? "Check" : "UnCheck", 2&
+	Autorun_Set(!Autorun_Get())
+}
+
+Autorun_Get()
+{
+	RegRead state, HKCU\Software\Microsoft\Windows\CurrentVersion\Run, % AppTitle
+	return !!state
+}
+
+Autorun_Set(state)
+{
+	keyDir := "HKCU\Software\Microsoft\Windows\CurrentVersion\Run"
+	if (state)
+		RegWrite REG_SZ, % keyDir, % AppTitle, % Quote(A_ScriptFullPath)
+	else
+		RegDelete % keyDir, % AppTitle
+	Menu sub1, % state ? "Check" : "UnCheck", 3&
 }

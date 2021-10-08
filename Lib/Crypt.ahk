@@ -8,7 +8,6 @@
 ; Forum .....: https://www.autohotkey.com/boards/viewtopic.php?f=6&t=23413
 ; ===============================================================================================================================
 
-
 class Crypt
 {
 
@@ -365,9 +364,9 @@ class Crypt
 
 		CreateHash(hAlgorithm, hmac := 0, encoding := "utf-8")
 		{
+			phHash := pbSecret := cbSecret := "" ;#Warn compat
 			if (hmac)
 				cbSecret := Crypt.helper.StrPutVar(hmac, pbSecret, encoding)
-            phHash := ""
 			NT_STATUS := DllCall("bcrypt\BCryptCreateHash", "ptr",  hAlgorithm
 			                                              , "ptr*", phHash
 			                                              , "ptr",  pbHashObject := 0
@@ -423,11 +422,11 @@ class Crypt
 
 			if (IV != "")
 			{
-                Encoding := "UTF-8"
+				Encoding := "UTF-8" ;#Warn compat
 				cbIV := VarSetCapacity(pbIV, BCRYPT_BLOCK_LENGTH, 0)
 				StrPut(IV, &pbIV, BCRYPT_BLOCK_LENGTH, Encoding)
 			}
-            cbOutput := pbIV := cbIV := ""
+			cbOutput := pbIV := cbIV := "" ;#Warn compat
 			NT_STATUS := DllCall("bcrypt\BCryptDecrypt", "ptr",   hKey
 			                                           , "ptr",   &pbInput
 			                                           , "uint",  cbInput
@@ -466,11 +465,11 @@ class Crypt
 
 			if (IV != "")
 			{
-                Encoding := "UTF-8"
+				Encoding := "UTF-8" ;#Warn compat
 				cbIV := VarSetCapacity(pbIV, BCRYPT_BLOCK_LENGTH, 0)
 				StrPut(IV, &pbIV, BCRYPT_BLOCK_LENGTH, Encoding)
 			}
-            cbOutput := pbIV := cbIV := ""
+			cbOutput := pbIV := cbIV := "" ;#Warn compat
 			NT_STATUS := DllCall("bcrypt\BCryptEncrypt", "ptr",   hKey
 			                                           , "ptr",   &pbInput
 			                                           , "uint",  cbInput
@@ -563,7 +562,7 @@ class Crypt
 
 		GenerateSymmetricKey(hAlgorithm, Key, Encoding := "utf-8")
 		{
-            phKey := ""
+			phKey := "" ;#Warn compat
 			cbSecret := Crypt.Helper.StrPutVar(Key, pbSecret, Encoding)
 			NT_STATUS := DllCall("bcrypt\BCryptGenerateSymmetricKey", "ptr",  hAlgorithm
 			                                                        , "ptr*", phKey
@@ -581,7 +580,7 @@ class Crypt
 
 		GetProperty(hObject, pszProperty, cbOutput)
 		{
-            pcbResult := pbOutput := ""
+			pcbResult := pbOutput := "" ;#Warn compat
 			NT_STATUS := DllCall("bcrypt\BCryptGetProperty", "ptr",   hObject
 			                                               , "ptr",   &pszProperty
 			                                               , "uint*", pbOutput
@@ -610,7 +609,7 @@ class Crypt
 
 		OpenAlgorithmProvider(pszAlgId, dwFlags := 0, pszImplementation := 0)
 		{
-            phAlgorithm := ""
+			phAlgorithm := "" ;#Warn compat
 			NT_STATUS := DllCall("bcrypt\BCryptOpenAlgorithmProvider", "ptr*", phAlgorithm
 			                                                         , "ptr",  &pszAlgId
 			                                                         , "ptr",  pszImplementation
@@ -647,7 +646,7 @@ class Crypt
 			static CRYPT_STRING := { "BASE64": 0x1, "BINARY": 0x2, "HEX": 0x4, "HEXRAW": 0xc }
 			static CRYPT_STRING_NOCRLF := 0x40000000
 
-            pcchString := ""
+			pcchString := "" ;#Warn compat
 			if (DllCall("crypt32\CryptBinaryToString", "ptr",   &pbBinary
 			                                         , "uint",  cbBinary
 			                                         , "uint",  (CRYPT_STRING[dwFlags] | CRYPT_STRING_NOCRLF)
@@ -671,7 +670,7 @@ class Crypt
 		CryptStringToBinary(pszString, ByRef pbBinary, dwFlags := "BASE64")
 		{
 			static CRYPT_STRING := { "BASE64": 0x1, "BINARY": 0x2, "HEX": 0x4, "HEXRAW": 0xc }
-            pcbBinary := ""
+			pcbBinary := "" ;#Warn compat
 			if (DllCall("crypt32\CryptStringToBinary", "ptr",   &pszString
 			                                         , "uint",  0
 			                                         , "uint",  CRYPT_STRING[dwFlags]
