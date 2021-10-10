@@ -26,6 +26,10 @@ Error(e)
 	}
 	if (err.CREDENTIALS.user)
 		err.CREDENTIALS.user := "Present"
+	if (err.CREDENTIALS["client-id"])
+		err.CREDENTIALS["client-id"] := "Present"
+	if (err.CREDENTIALS["client-secret"])
+		err.CREDENTIALS["client-secret"] := "Present"
 	if (err.ADVANCED.server)
 		err.ADVANCED.server := "Present"
 	if (err.ADVANCED.NODE_EXTRA_CA_CERTS)

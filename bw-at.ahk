@@ -107,11 +107,21 @@ Timeout(INI.GENERAL.timeout, INI.GENERAL.action)
 Bitwarden_SyncAuto(INI.GENERAL.sync)
 
 ; Active vault information
-BwStatus := FileOpen("data.json", 0x3).Read(4096)
-RegExMatch(BwStatus, "userEmail\W+\K[^""]+", user)
 IsLocked := IsLogged := false
-if (user && user = INI.CREDENTIALS.user)
-	IsLocked := IsLogged := true
+BwStatus := FileOpen("data.json", 0x3).Read()
+BwStatus := BwStatus ? JSON.Load(BwStatus) : {}
+if (BwStatus.accessToken)
+{
+	if (INI.CREDENTIALS["api-key"]
+		&& BwStatus.apikey_clientId && BwStatus.apikey_clientSecret
+		&& BwStatus.apikey_clientId = INI.CREDENTIALS["client-id"]
+		&& BwStatus.apikey_clientSecret = INI.CREDENTIALS["client-secret"])
+	|| (!INI.CREDENTIALS["api-key"]
+		&& BwStatus.userEmail && BwStatus.userEmail = INI.CREDENTIALS.user)
+	{
+		IsLocked := IsLogged := true
+	}
+}
 
 if (IsLocked)
 {
