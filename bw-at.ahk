@@ -31,6 +31,7 @@ global SESSION := ""
 	, BwStatus := {}
 	, MasterPw := ""
 	, UserSeed := ""
+	, ClipData := ""
 	, AppTitle := "Bitwarden Auto-Type"
 
 ; For VSCode only

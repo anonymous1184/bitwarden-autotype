@@ -9,7 +9,7 @@ AutoType(Entry, Mode)
 
 	; Generate TOTP
 	totp := TOTP_Parse(Entry.otpauth, Mode)
-	if (totp)
+	if StrLen(totp)
 		Entry.totp := totp
 
 	; TCATO

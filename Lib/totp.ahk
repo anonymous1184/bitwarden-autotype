@@ -2,8 +2,9 @@
 ; https://tools.ietf.org/html/rfc6238
 Totp(Secret, Digits := 6, Period := 30, Algorithm := "SHA1")
 {
-	if !key := Base32_Hex(Secret)
-		return
+	key := Base32_Hex(Secret)
+	if (!key)
+		return Totp_Tip("Invalid Secret")
 	counter := Format("{:016x}", Epoch() // Period)
 	hmac := Crypt.Hash.HMAC(Algorithm, counter, key, "HEX")
 	offset := hex2dec(SubStr(hmac, 0)) * 2 + 1
@@ -11,19 +12,40 @@ Totp(Secret, Digits := 6, Period := 30, Algorithm := "SHA1")
 	return SubStr(totp, -1 * Digits + 1)
 }
 
-Totp_Format(Totp)
+Totp_Clipboard(Totp, Period)
 {
-	mid := StrLen(Totp) // 2
-	return SubStr(Totp, 1, mid) " " SubStr(Totp, ++mid)
+	static fObject := ""
+	if IsObject(fObject)
+	{
+		SetTimer % fObject, Delete
+		fObject := ""
+	}
+	if (!ClipData)
+	{
+		ClipData := ClipboardAll
+		Clipboard := Totp
+	}
+	fObject := Func("Totp_ClipboardReset").Bind(Period)
+	SetTimer % fObject, % 900
+}
+
+Totp_ClipboardReset(Period)
+{
+	if (A_Sec = 0 || A_Sec = Period)
+	{
+		Clipboard := ClipData
+		ClipData := ""
+		SetTimer ,, Delete
+	}
 }
 
 ; https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 Totp_Parse(KeyUri, Mode)
 {
 	if (InStr(KeyUri, "otpauth://totp") != 1)
-		return
+		return Totp_Tip("Invalid Key Uri")
 	if !RegExMatch(KeyUri, "secret=\K\w+", secret)
-		return
+		return Totp_Tip("Missing secret")
 	RegExMatch(KeyUri, "digits=\K\d+", digits)
 	digits := digits > 6 ? 8 : 6
 	RegExMatch(KeyUri, "period=\K\d+", period)
@@ -35,11 +57,23 @@ Totp_Parse(KeyUri, Mode)
 	if (Mode = "default")
 	{
 		if (INI.GENERAL.totp)
-			Clipboard := totp
+			Totp_Clipboard(totp, period)
 		if (INI.GENERAL.totp = 1)
-			Tip("TOTP: " TOTP_Format(totp))
+			Totp_Tip(totp)
 	}
 	return totp
+}
+
+Totp_Tip(Message)
+{
+	timeout := 10
+	if (Message ~= "^\d+$")
+	{
+		mid := StrLen(Message) // 2
+		Message := SubStr(Message, 1, mid) " " SubStr(Message, ++mid)
+		timeout := 30
+	}
+	Tip("TOTP: " Message, timeout)
 }
 
 Totp_Toggle()
