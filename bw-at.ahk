@@ -16,8 +16,8 @@ DetectHiddenWindows On
 ; For startup
 Process Priority,, High
 
-/*@Ahk2Exe-Keep
 DebuggerCheck()
+/*@Ahk2Exe-Keep
 FileGetVersion version, % A_ScriptFullPath
 if (version ~= "999$")
 	Alert(0x30, "DEBUG", "This is a DEBUG version!")
