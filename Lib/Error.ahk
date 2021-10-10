@@ -12,6 +12,7 @@ Error(e)
 		. "locked": IsLocked
 		, "logged": IsLogged
 		, "portable": !InStr(A_ScriptFullPath, A_ProgramFiles)
+		, "session": !!SESSION
 		, "status": BwStatus.status
 		, "sync": BwStatus.lastSync
 		, "version": version ? version : "AHK: " A_AhkVersion
