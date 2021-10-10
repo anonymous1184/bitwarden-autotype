@@ -49,7 +49,7 @@ if (verbose && !isInstalled)
 WinKill ahk_exe bw-at.exe
 
 ; Download progress
-Gui New, +AlwaysOnTop +HwndHwnd -SysMenu
+Gui New, +AlwaysOnTop +HwndHwnd +LastFound -SysMenu
 Gui Font, s11 q5, Consolas
 Gui Add, Text,, Getting version...
 Gui Show,, > Bitwarden CLI
@@ -95,6 +95,8 @@ if CheckVersion(offline, online)
 	Gui % hWnd ":Destroy"
 else
 {
+	WinSetTitle % "> Bitwarden CLI v" online
+
 	; Download
 	SetTimer Download, -1
 	SetTimer Percentage, 1
