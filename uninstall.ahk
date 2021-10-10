@@ -82,8 +82,8 @@ for i,user in users
 RegDelete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Auto-Type
 
 ; Self-signed certificate
-Run PowerShell -Command "Get-ChildItem Cert:\LocalMachine\*\* | Where-Object"
-	. " {$_.Subject -eq 'CN=Auto-Type'} | Remove-Item",, Hide
+Run % "PowerShell -Command " Quote("Get-ChildItem Cert:\LocalMachine\*\* | "
+	. "Where-Object {$_.Subject -like 'CN=Auto-Typ*'} | Remove-Item"),, Hide
 
 ; Acknowledge
 Alert(0x40, "Complete!", "Bitwarden Auto-Type has been uninstalled.")

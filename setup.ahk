@@ -68,6 +68,11 @@ if (ErrorLevel && !offline)
 	ExitApp 1
 }
 
+; Remove old certificate
+Run % "PowerShell -Command " Quote("Get-ChildItem Cert:\LocalMachine\*\* | "
+	. "Where-Object {$_.Subject -like 'CN=Auto-Type*'} | Remove-Item")
+	,, Hide, psPid
+
 ; Check for latest
 asset := {}
 assets := {}
@@ -113,11 +118,16 @@ FileInstall bw-at.exe, % A_ProgramFiles "\Auto-Type\bw-at.exe", % true
  * https://www.autohotkey.com/boards/viewtopic.php?f=14&t=94956
  */
 FileInstall bw-at.ps1, % A_Temp "\bw-at.ps1", % true
+ErrorLevel := psPid
+while ErrorLevel
+{
+	Process Exist, % psPid
+	Sleep 500
+}
 Run % "PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1 "
 		. Quote("Auto-Type") " "
 		. Quote(A_ProgramFiles "\Auto-Type\bw-at.exe")
 	, % A_Temp, Hide, psPid
-; Run PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1, % A_Temp, Hide, psPid
 
 ; Uninstaller
 FileInstall uninstall.exe, % A_ProgramFiles "\Auto-Type\uninstall.exe", % true
