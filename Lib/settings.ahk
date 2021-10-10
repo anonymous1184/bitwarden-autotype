@@ -101,13 +101,13 @@ Settings()
 		Alert(0x34, "Existing unlock method will be overridden, continue?")
 		IfMsgBox No
 			return
-		switch Pin
-		{
-			case 1: Pin_Setup()
-			case 2: Aac_Setup()
-		}
-		INI.GENERAL.pin := Pin
 	}
+	switch Pin
+	{
+		case 1: Pin_Setup()
+		case 2: Aac_Setup()
+	}
+	INI.GENERAL.pin := Pin
 }
 
 Settings_Check()
