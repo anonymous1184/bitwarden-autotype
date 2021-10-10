@@ -4,9 +4,9 @@ Login()
 	static Passwd
 	tsl := INI.CREDENTIALS.tsl
 	tsl := "None" (!tsl ? "||" : "|")
-		. "Email codes" (tsl = 1 ? "||" : "|")
-		. "Authenticator app" (tsl = 2 ? "||" : "|")
-		. "Yubico security key" (tsl = 3 ? "||" : "|")
+		. "Email Verification Codes" (tsl = 1 ? "||" : "|")
+		. "Authenticator Application" (tsl = 2 ? "||" : "|")
+		. "YubiKey OTP Security Key" (tsl = 3 ? "||" : "|")
 	Gui Login:New, +LastFound -SysMenu
 	Gui Login:Font, s11 q5, Consolas
 	c := INI.CREDENTIALS["api-key"] ? "Checked " : ""

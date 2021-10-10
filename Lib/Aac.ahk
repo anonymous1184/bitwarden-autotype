@@ -83,7 +83,7 @@ Aac_Verify()
 			continue
 		hash := Crypt.Hash.String("SHA512", MasterPw)
 		INI.DATA.pin := Crypt.Encrypt.String("AES", "CBC", secret, hash)
-		Alert(0x40, "Application will unlock using authenticator codes")
+		Alert(0x40, "Application will unlock using Authenticator codes")
 		Gui Aac:Destroy
 		return
 	}
