@@ -101,12 +101,14 @@ Settings()
 		Alert(0x34, "Existing unlock method will be overridden, continue?")
 		IfMsgBox No
 			return
-		switch Pin
-		{
-			case 1: Pin_Setup()
-			case 2: Aac_Setup()
-		}
-		INI.GENERAL.pin := Pin
+	}
+	INI.GENERAL.pin := Pin
+	if (!MasterPw)
+		return
+	switch Pin
+	{
+		case 1: Pin_Setup()
+		case 2: Aac_Setup()
 	}
 }
 
@@ -163,6 +165,9 @@ Settings_Validate(Path)
 
 	if !(INI.CREDENTIALS.tsl ~= "^(0|1|2|3)$")
 		INI.CREDENTIALS.tsl := 0
+
+	if !(INI.CREDENTIALS["api-key"] ~= "^(0|1)$")
+		INI.CREDENTIALS["api-key"] := 0
 
 	if !(INI.GENERAL.pin ~= "^(0|1|2)$")
 		INI.GENERAL.pin := 0

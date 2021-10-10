@@ -49,7 +49,7 @@ if (verbose && !isInstalled)
 WinKill ahk_exe bw-at.exe
 
 ; Download progress
-Gui New, +AlwaysOnTop +HwndHwnd -SysMenu
+Gui New, +AlwaysOnTop +HwndHwnd +LastFound -SysMenu
 Gui Font, s11 q5, Consolas
 Gui Add, Text,, Getting version...
 Gui Show,, > Bitwarden CLI
@@ -95,6 +95,8 @@ if CheckVersion(offline, online)
 	Gui % hWnd ":Destroy"
 else
 {
+	WinSetTitle % "> Bitwarden CLI v" online
+
 	; Download
 	SetTimer Download, -1
 	SetTimer Percentage, 1
@@ -255,9 +257,9 @@ return
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename setup.ahk
-;@Ahk2Exe-SetProductVersion 1.1.1.1
-;@Ahk2Exe-SetVersion 1.1.1.1
-;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.1.1, 0
+;@Ahk2Exe-SetProductVersion 1.1.2.1
+;@Ahk2Exe-SetVersion 1.1.2.1
+;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.2.1, 0
 ; BinMod
 ;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "2.AutoHotkeyGUI.Auto-Type-GUI"

@@ -115,6 +115,8 @@ Why `winapp://` or `app://`? Both are [currently unused][09]. `winapp://` is con
   - Run the portable version as Administrator.
 - `{SmartTab}` doesn't work with Chromium-based applications.
   - Normal <kbd>Tab</kbd> is sent. For more than one <kbd>Tab</kbd> use a custom `auto-type` rule.
+- From October 2021 Bitwarden Server detects plain CLI logins (_ie_, no Two-Step Login) as a bot login attempt.
+  - Use the Personal API Key instead of username/password to circumvent the issue.
 
 ## TODO
 

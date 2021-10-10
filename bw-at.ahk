@@ -16,8 +16,8 @@ DetectHiddenWindows On
 ; For startup
 Process Priority,, High
 
-/*@Ahk2Exe-Keep
 DebuggerCheck()
+/*@Ahk2Exe-Keep
 FileGetVersion version, % A_ScriptFullPath
 if (version ~= "999$")
 	Alert(0x30, "DEBUG", "This is a DEBUG version!")
@@ -107,11 +107,21 @@ Timeout(INI.GENERAL.timeout, INI.GENERAL.action)
 Bitwarden_SyncAuto(INI.GENERAL.sync)
 
 ; Active vault information
-BwStatus := FileOpen("data.json", 0x3).Read(4096)
-RegExMatch(BwStatus, "userEmail\W+\K[^""]+", user)
 IsLocked := IsLogged := false
-if (user && user = INI.CREDENTIALS.user)
-	IsLocked := IsLogged := true
+BwStatus := FileOpen("data.json", 0x3).Read()
+BwStatus := BwStatus ? JSON.Load(BwStatus) : {}
+if (BwStatus.accessToken)
+{
+	if (INI.CREDENTIALS["api-key"]
+		&& BwStatus.apikey_clientId && BwStatus.apikey_clientSecret
+		&& BwStatus.apikey_clientId = INI.CREDENTIALS["client-id"]
+		&& BwStatus.apikey_clientSecret = INI.CREDENTIALS["client-secret"])
+	|| (!INI.CREDENTIALS["api-key"]
+		&& BwStatus.userEmail && BwStatus.userEmail = INI.CREDENTIALS.user)
+	{
+		IsLocked := IsLogged := true
+	}
+}
 
 if (IsLocked)
 {
@@ -189,9 +199,9 @@ return ; End of auto-execute thread
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename bw-at.ahk
-;@Ahk2Exe-SetProductVersion 1.1.1.1
-;@Ahk2Exe-SetVersion 1.1.1.1
-;@Ahk2Exe-UpdateManifest 0, Auto-Type, 1.1.1.1, 0
+;@Ahk2Exe-SetProductVersion 1.1.2.1
+;@Ahk2Exe-SetVersion 1.1.2.1
+;@Ahk2Exe-UpdateManifest 0, Auto-Type, 1.1.2.1, 0
 ; BinMod
 ;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "2.AutoHotkeyGUI.Auto-Type-GUI"

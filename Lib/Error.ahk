@@ -12,6 +12,7 @@ Error(e)
 		. "locked": IsLocked
 		, "logged": IsLogged
 		, "portable": !InStr(A_ScriptFullPath, A_ProgramFiles)
+		, "session": !!SESSION
 		, "status": BwStatus.status
 		, "sync": BwStatus.lastSync
 		, "version": version ? version : "AHK: " A_AhkVersion
@@ -25,6 +26,10 @@ Error(e)
 	}
 	if (err.CREDENTIALS.user)
 		err.CREDENTIALS.user := "Present"
+	if (err.CREDENTIALS["client-id"])
+		err.CREDENTIALS["client-id"] := "Present"
+	if (err.CREDENTIALS["client-secret"])
+		err.CREDENTIALS["client-secret"] := "Present"
 	if (err.ADVANCED.server)
 		err.ADVANCED.server := "Present"
 	if (err.ADVANCED.NODE_EXTRA_CA_CERTS)

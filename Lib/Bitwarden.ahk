@@ -5,6 +5,12 @@ Bitwarden(Parameters, Passwd := "")
 
 	env := {}
 	env.BITWARDENCLI_APPDATA_DIR := A_WorkingDir
+	if (INI.CREDENTIALS["api-key"] && INI.CREDENTIALS["client-id"]
+		&& INI.CREDENTIALS["client-secret"])
+	{
+		env.BW_CLIENTID := INI.CREDENTIALS["client-id"]
+		env.BW_CLIENTSECRET := INI.CREDENTIALS["client-secret"]
+	}
 	env.BW_NOINTERACTION := "true"
 	env.BW_PASSWORD := Passwd
 	env.BW_RAW := "true"
