@@ -8,6 +8,14 @@ YYYY/MM/DD - MAJOR.MINOR.RELEASE
 [!] = Fix / Security
 
 
+2021/10/08 - 1.1.2
+——————————————————
+[!] Minor fixes and wording
+[!] Adding an unlock method in settings UI was ignored
+[+] Personal API Key as login method
+[=] Bitwarden CLI version >= 1.11.0
+
+
 2021/10/08 - 1.1.1
 ——————————————————
 [!] Speed improvements

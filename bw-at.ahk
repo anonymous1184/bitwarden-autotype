@@ -199,9 +199,9 @@ return ; End of auto-execute thread
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename bw-at.ahk
-;@Ahk2Exe-SetProductVersion 1.1.1.1
-;@Ahk2Exe-SetVersion 1.1.1.1
-;@Ahk2Exe-UpdateManifest 0, Auto-Type, 1.1.1.1, 0
+;@Ahk2Exe-SetProductVersion 1.1.2.1
+;@Ahk2Exe-SetVersion 1.1.2.1
+;@Ahk2Exe-UpdateManifest 0, Auto-Type, 1.1.2.1, 0
 ; BinMod
 ;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "2.AutoHotkeyGUI.Auto-Type-GUI"
