@@ -43,11 +43,10 @@ for _,script in ["bw-at", "uninstall", "setup"]
 	FileOpen(script ".ahk", 0x1, "UTF-8").Write(buffer)
 	RunWait % A_ProgramFiles "\AutoHotkey\Compiler\Ahk2Exe.exe"
 		. " /in " Quote(A_ScriptDir "\" script ".ahk")
-	RunWait % "PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1"
-			. " " Quote("Auto-Type-Dist")
-			. " " Quote(A_ScriptDir "\" script ".exe")
-		, % A_ScriptDir, Hide
 }
+RunWait % "PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1"
+		. " " Quote("Auto-Type-Dist") " " Quote("setup.exe") " start"
+	, % A_ScriptDir, Hide
 FileMove setup.exe, release, % true
 
 ; Portable
@@ -58,7 +57,7 @@ FileOpen("bw-at.ahk", 0x1, "UTF-8").Write(buffer)
 ; ExitApp
 RunWait % A_ProgramFiles "\AutoHotkey\Compiler\Ahk2Exe.exe /in bw-at.ahk"
 RunWait % "PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1 "
-		. Quote("Auto-Type-Dist") " " Quote("bw-at.exe")
+		. Quote("Auto-Type-Dist") " " Quote("bw-at.exe") " end"
 	, % A_ScriptDir, Hide
 
 FileDelete release\bw-at.zip
@@ -71,10 +70,6 @@ Zip("release\bw-at.zip"
 
 ; Clean
 FileDelete *.exe
-RunWait % "PowerShell -Command " Quote("Get-ChildItem Cert:\LocalMachine\*\*"
-		. " | Where-Object {$_.Subject -eq 'CN=Auto-Type-Dist'}"
-		. " | Remove-Item")
-	,, Hide
 
 if (DEBUG)
 {

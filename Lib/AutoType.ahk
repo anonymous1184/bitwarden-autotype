@@ -8,9 +8,12 @@ AutoType(Entry, Mode)
 		Exit
 
 	; Generate TOTP
-	totp := TOTP_Parse(Entry.otpauth, Mode)
-	if (totp)
-		Entry.totp := totp
+	if StrLen(Entry.otpauth)
+	{
+		totp := TOTP_Parse(Entry.otpauth, Mode)
+		if StrLen(totp)
+			Entry.totp := totp
+	}
 
 	; TCATO
 	switch Entry.tcato

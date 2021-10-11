@@ -8,6 +8,14 @@ YYYY/MM/DD - MAJOR.MINOR.RELEASE
 [!] = Fix / Security
 
 
+2021/11/08 - 1.1.3
+——————————————————
+[!] TOTP generation for other than otpauth Key Uri
+[+] Steam Authenticator codes can be generated now
+[+] Added validations for self-signed certificates issues
+[=] Bitwarden CLI version >= 1.11.0
+
+
 2021/10/08 - 1.1.2
 ——————————————————
 [!] Minor fixes and wording
