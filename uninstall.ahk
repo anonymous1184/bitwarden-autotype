@@ -2,6 +2,7 @@
 ListLines Off
 SetBatchLines -1
 DetectHiddenWindows On
+Process Priority,, High
 
 ; Arguments
 verbose := !quiet := false
@@ -11,22 +12,13 @@ if (A_Args[1] ~= "i)-quiet")
 if (verbose)
 {
 	Alert_Labels("", "&Exit")
-	Alert(0x134, "Uninstall?", "Do you want to uninstall Bitwarden Auto-Type?")
+	msg := "Do you want to uninstall Bitwarden Auto-Type?"
+	Alert(0x134, "Uninstall?", msg)
 	IfMsgBox No ; Relabeled as `Exit`
 		ExitApp
 }
 
-if WinExist("ahk_exe bw-at.exe")
-{
-	if (verbose)
-	{
-		Alert_Labels("", "&Exit")
-		Alert(0x24, "Close running instance?", "The application is currently running, close it before continuing?")
-		IfMsgBox No ; Relabeled as `Exit`
-			ExitApp
-	}
-	WinKill ahk_exe bw-at.exe
-}
+WinKill ahk_exe bw-at.exe
 
 remove := 1
 if (verbose)
@@ -81,12 +73,13 @@ for i,user in users
 ; Uninstall info
 RegDelete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Auto-Type
 
-; Self-signed certificate
+; Remove certificate
 Run % "PowerShell -Command " Quote("Get-ChildItem Cert:\LocalMachine\*\* | "
 	. "Where-Object {$_.Subject -like 'CN=Auto-Typ*'} | Remove-Item"),, Hide
 
 ; Acknowledge
-Alert(0x40, "Complete!", "Bitwarden Auto-Type has been uninstalled.")
+if (verbose)
+	Alert(0x40, "Complete!", "Bitwarden Auto-Type has been uninstalled.")
 
 ; Self-destruct
 if (A_IsCompiled)

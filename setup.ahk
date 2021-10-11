@@ -2,6 +2,7 @@
 ListLines Off
 SetBatchLines -1
 DetectHiddenWindows On
+Process Priority,, High
 
 ; Preload the turtle...
 Run PowerShell -C Exit,, Hide
@@ -13,28 +14,40 @@ if (A_Args[1] ~= "i)-quiet")
 
 ; Upgrade notice
 if (verbose && A_OSVersion = "WIN_7")
-	Alert(0x10, "Officially unsupported OS", "In January of 2020, Microsoft stopped the support of Windows 7. Is highly recommended to upgrade your OS.")
-
-if !FileExist(A_ProgramFiles "\Auto-Type\bw.exe")
-	&& !DllCall("Wininet\InternetCheckConnection", "Str","https://github.com", "Ptr",1, "Ptr",0)
 {
-	Alert(0x10, "Error", "Internet connectivity is required to download Bitwarden CLI.")
+	msg := "In January of 2020, Microsoft stopped the support of Windows 7."
+		. " Is highly recommended to upgrade your OS."
+	Alert(0x10, "Officially unsupported OS", msg)
+}
+conn := DllCall("Wininet\InternetCheckConnection"
+	, "Str","https://github.com"
+	, "Ptr",1
+	, "Ptr",0)
+if (!FileExist(A_ProgramFiles "\Auto-Type\bw.exe") && !conn)
+{
+	Alert(0x10, "Error", "Internet is required to download Bitwarden CLI.")
 	ExitApp 1
 }
+
+projectRoot := "https://github.com/anonymous1184/bitwarden-autotype/"
 
 ; Check if latest version
 if (A_IsCompiled && !Update_IsLatest())
 {
-	Alert(0x44, "Outdated installer", "There is a new version of this application.`n`nIs NOT recommended the usage of older versions. Do you want to go to GitHub and download the current release?")
+	msg := "There is a new version of this application.`n`nIs NOT recommend"
+		. "ed the usage of older versions. Do you want to go to GitHub "
+		. "and download the current release?"
+	Alert(0x44, "Outdated installer", msg)
 	IfMsgBox Yes
 	{
-		Run https://github.com/anonymous1184/bitwarden-autotype/releases/latest
+		Run % projectRoot "releases/latest"
 		ExitApp
 	}
 }
 
 ; Registry key
-RegRead isInstalled, % key := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Auto-Type"
+key := "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Auto-Type"
+RegRead isInstalled, % key
 
 ; Ask
 if (verbose && !isInstalled)
@@ -64,14 +77,20 @@ UrlDownloadToFile https://api.github.com/repos/bitwarden/cli/releases/latest
 	, % A_Temp "\bw-releases.json"
 if (ErrorLevel && !offline)
 {
-	Alert(0x11, "Error", "Bitwarden CLI release information cannot be retrieved.")
+	Alert(0x11, "Error", "Bitwarden CLI release couldn't be retrieved.")
 	ExitApp 1
 }
 
-; Remove old certificate
-Run % "PowerShell -Command " Quote("Get-ChildItem Cert:\LocalMachine\*\* | "
-	. "Where-Object {$_.Subject -like 'CN=Auto-Type*'} | Remove-Item")
-	,, Hide, psPid
+; Destination
+FileCreateDir % A_ProgramFiles "\Auto-Type"
+
+; Uninstaller
+FileInstall uninstall.exe, % A_ProgramFiles "\Auto-Type\uninstall.exe", % true
+
+; App
+FileInstall bw-at.exe, % A_ProgramFiles "\Auto-Type\bw-at.exe", % true
+signComplete := false
+SetTimer Signature, -1
 
 ; Check for latest
 asset := {}
@@ -92,7 +111,9 @@ for i,asset in assets
 if !asset.HasKey("browser_download_url")
 {
 	online := "1.18.1"
-	asset := { "browser_download_url":"https://github.com/bitwarden/cli/releases/download/v1.18.1/bw-windows-1.18.1.zip", "size":18788019 }
+	url := "https://github.com/bitwarden/cli/releases/download"
+		. "/v" online "/bw-windows-" online ".zip"
+	asset := { "size":18788019, "browser_download_url":url }
 }
 
 ; Check if already latest
@@ -105,32 +126,7 @@ else
 	; Download
 	SetTimer Download, -1
 	SetTimer Percentage, 1
-
-	; Destination
-	FileCreateDir % A_ProgramFiles "\Auto-Type"
 }
-
-; App
-FileInstall bw-at.exe, % A_ProgramFiles "\Auto-Type\bw-at.exe", % true
-
-; Signature
-/*TODO: Move into assets\ after the bug is fixed:
- * https://www.autohotkey.com/boards/viewtopic.php?f=14&t=94956
- */
-FileInstall bw-at.ps1, % A_Temp "\bw-at.ps1", % true
-ErrorLevel := psPid
-while ErrorLevel
-{
-	Process Exist, % psPid
-	Sleep 500
-}
-Run % "PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1 "
-		. Quote("Auto-Type") " "
-		. Quote(A_ProgramFiles "\Auto-Type\bw-at.exe")
-	, % A_Temp, Hide, psPid
-
-; Uninstaller
-FileInstall uninstall.exe, % A_ProgramFiles "\Auto-Type\uninstall.exe", % true
 
 ; Start Menu
 start := A_AppDataCommon "\Microsoft\Windows\Start Menu\Programs\Auto-Type"
@@ -170,32 +166,36 @@ FileGetVersion version, % A_ProgramFiles "\Auto-Type\bw-at.exe"
 ; https://nsis.sourceforge.io/Add_uninstall_information_to_Add/Remove_Programs
 RegWrite REG_SZ, % key,, % A_Now
 RegWrite REG_SZ, % key, Comments, Bitwarden Auto-Type capability via its CLI.
-RegWrite REG_SZ, % key, DisplayIcon, % Quote(A_ProgramFiles "\Auto-Type\bw-at.exe")
+RegWrite REG_SZ, % key, DisplayIcon, % A_ProgramFiles "\Auto-Type\bw-at.exe"
 RegWrite REG_SZ, % key, DisplayName, Bitwarden Auto-Type
 RegWrite REG_SZ, % key, DisplayVersion, % version
-RegWrite REG_DWORD, % key, EstimatedSize, % Format("{:#x}", installSize // 1024) ; In kb
-RegWrite REG_SZ, % key, HelpLink, https://github.com/anonymous1184/bitwarden-autotype#readme
+RegWrite REG_DWORD, % key, EstimatedSize, % Format("{:#x}", installSize // 1024)
+RegWrite REG_SZ, % key, HelpLink, % projectRoot "#readme"
 RegWrite REG_SZ, % key, InstallDate, % A_YYYY A_MM A_DD
 RegWrite REG_SZ, % key, InstallLocation, % A_ProgramFiles "\Auto-Type"
 RegWrite REG_DWORD, % key, Language, % Format("{:#x}", 1033) ; || SZ "x64;1033"
 RegWrite REG_DWORD, % key, NoModify, 0x1
 RegWrite REG_DWORD, % key, NoRepair, 0x1
 RegWrite REG_SZ, % key, Publisher, u/anonymous1184
-RegWrite REG_SZ, % key, QuietUninstallString, % Quote(A_ProgramFiles "\Auto-Type\uninstall.exe") " -quiet -s:0"
-RegWrite REG_SZ, % key, UninstallString, % Quote(A_ProgramFiles "\Auto-Type\uninstall.exe")
-RegWrite REG_SZ, % key, URLInfoAbout, https://github.com/anonymous1184/bitwarden-autotype/issues
-RegWrite REG_SZ, % key, URLUpdateInfo, https://github.com/anonymous1184/bitwarden-autotype/releases/latest
+uninstaller := Quote(A_ProgramFiles "\Auto-Type\uninstall.exe")
+RegWrite REG_SZ, % key, QuietUninstallString, % uninstaller " -quiet:1"
+RegWrite REG_SZ, % key, UninstallString, % uninstaller
+RegWrite REG_SZ, % key, URLInfoAbout, % projectRoot "/issues"
+RegWrite REG_SZ, % key, URLUpdateInfo, % projectRoot "/releases/latest"
 version := StrSplit(version, ".")
 RegWrite REG_SZ, % key, Version, % version[1] "." version[2] "." version[3]
 RegWrite REG_DWORD, % key, VersionMajor, % Format("{:#x}", version[1])
 RegWrite REG_DWORD, % key, VersionMinor, % Format("{:#x}", version[2])
 
 /*
-If installing after an uninstall that couldn't remove directories, those directories
-are queued for deletion on the next reboot. The entries contain a double line-ending
-that AHK can't handle, thus reg.exe is used to query the values then parsed/imported
+If installing immediately after an uninstall that could not remove directories,
+those directories are queued for deletion on the next reboot. Entries contain a
+double line-ending that AHK can't handle, thus reg.exe is used for querying the
+values and then manually parsed and imported them.
 */
-pending := GetStdStream("reg query " Quote("HKLM\SYSTEM\CurrentControlSet\Control\Session Manager") " /v PendingFileRenameOperations /se *")
+key := "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager"
+cmd := "reg query " Quote(key) " /v PendingFileRenameOperations /se *"
+pending := GetStdStream(cmd)
 if InStr(pending, "Auto-Type")
 {
 	regData := ""
@@ -204,22 +204,17 @@ if InStr(pending, "Auto-Type")
 		if (FileExist(file) && !InStr(file, "\Auto-Type"))
 			regData .=  "\??\" file "`n`n"
 	}
-	RegWrite REG_MULTI_SZ, HKLM\SYSTEM\CurrentControlSet\Control\Session Manager, PendingFileRenameOperations, % regData
+	RegWrite REG_MULTI_SZ, % key, PendingFileRenameOperations, % regData
 }
+
+; PowerShell
+while !signComplete
+	ToolTip Please wait...
+ToolTip
 
 ; Acknowledge
 Alert(0x40, (isInstalled ? "Update" : "Installation") " complete!"
 	, "Application will be launched now.")
-
-; PowerShell
-ErrorLevel := psPid
-while ErrorLevel
-{
-	Process Exist, % psPid
-	ToolTip Please wait...
-}
-ToolTip
-FileDelete % A_Temp "\bw-at.ps1"
 
 ; Run, unelevated
 app := A_ProgramFiles "\Auto-Type\bw-at.exe" (isInstalled ? "" : " -settings")
@@ -228,6 +223,29 @@ DllCall("wdc\WdcRunTaskAsInteractiveUser", "Str",app, "Ptr",0)
 
 ExitApp
 
+
+Signature:
+	/*TODO: Move into assets\ after the bug is fixed:
+	* https://www.autohotkey.com/boards/viewtopic.php?f=14&t=94956
+	*/
+	FileInstall bw-at.ps1, % A_Temp "\bw-at.ps1", % true
+	RunWait % "PowerShell -ExecutionPolicy Bypass -File .\bw-at.ps1 "
+			. Quote("Auto-Type") " "
+			. Quote(A_ProgramFiles "\Auto-Type\bw-at.exe")
+			. " start"
+		, % A_Temp, Hide UseErrorLevel
+	if (ErrorLevel)
+	{
+		done := UIAccess(A_ProgramFiles "\Auto-Type\bw-at.exe", false)
+		if (!done)
+		{
+			Run % A_ProgramFiles "\Auto-Type\uninstall.exe -quiet"
+			ExitApp
+		}
+	}
+	signComplete := true
+	FileDelete % A_Temp "\bw-at.ps1"
+return
 
 Download:
 	UrlDownloadToFile % asset.browser_download_url, % A_Temp "\bw.zip"
@@ -240,7 +258,8 @@ return
 
 Percentage:
 	FileGetSize current, % A_Temp "\bw.zip"
-	GuiControl % hWnd ":", Static1, % "Downloaded: " Round(current / asset.size * 100, 2) "%"
+	downloaded := Round(current / asset.size * 100, 2)
+	GuiControl % hWnd ":", Static1, % "Downloaded: " downloaded "%"
 return
 
 #NoEnv
