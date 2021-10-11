@@ -122,9 +122,9 @@ ExitApp
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\uninstall.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename uninstall.ahk
-;@Ahk2Exe-SetProductVersion 1.1.2.1
-;@Ahk2Exe-SetVersion 1.1.2.1
-;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.2.1, 0
+;@Ahk2Exe-SetProductVersion 1.1.3.1
+;@Ahk2Exe-SetVersion 1.1.3.1
+;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.3.1, 0
 ; BinMod
 ;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "22.>AUTOHOTKEY SCRIPT<.$APPLICATION SOURCE"
