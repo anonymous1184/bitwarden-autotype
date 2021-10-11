@@ -26,7 +26,7 @@ Totp_Clipboard(Totp, Period)
 		Clipboard := Totp
 	}
 	fObject := Func("Totp_ClipboardReset").Bind(Period)
-	SetTimer % fObject, % 900
+	SetTimer % fObject, % 1000
 }
 
 Totp_ClipboardReset(Period)
@@ -39,20 +39,26 @@ Totp_ClipboardReset(Period)
 	}
 }
 
-; https://github.com/google/google-authenticator/wiki/Key-Uri-Format
-Totp_Parse(KeyUri, Mode)
+Totp_Parse(String, Mode)
 {
-	if (InStr(KeyUri, "otpauth://totp") != 1)
-		return Totp_Tip("Invalid Key Uri")
-	if !RegExMatch(KeyUri, "secret=\K\w+", secret)
-		return Totp_Tip("Missing secret")
-	RegExMatch(KeyUri, "digits=\K\d+", digits)
-	digits := digits > 6 ? 8 : 6
-	RegExMatch(KeyUri, "period=\K\d+", period)
-	period := period > 30 ? period : 30
-	RegExMatch(KeyUri, "algorithm=\K\w+", algorithm)
+	RegExMatch(String, "algorithm=\K\w+", algorithm)
 	if !(algorithm ~= "i)(SHA1|SHA256|SHA512)")
 		algorithm := "SHA1"
+	RegExMatch(String, "digits=\K\d+", digits)
+	digits := digits ? digits : 6
+	RegExMatch(String, "period=\K\d+", period)
+	period := period ? period : 30
+	secret := String
+	if (InStr(String, "otpauth://totp") = 1)
+	{
+		if !RegExMatch(String, "secret=\K\w+", secret)
+			secret := String
+	}
+	else if (InStr(String, "steam://") = 1)
+	{
+		digits := 5
+		secret := SubStr(String, 9)
+	}
 	totp := Totp(secret, digits, period, algorithm)
 	if (Mode = "default")
 	{
