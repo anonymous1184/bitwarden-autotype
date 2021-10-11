@@ -101,6 +101,7 @@ Settings()
 		Alert(0x34, "Existing unlock method will be overridden, continue?")
 		IfMsgBox No
 			return
+		INI.DATA.pin := ""
 	}
 	INI.GENERAL.pin := Pin
 	if (!MasterPw)
