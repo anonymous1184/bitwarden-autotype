@@ -41,25 +41,20 @@ Totp_ClipboardReset(Period)
 
 Totp_Parse(String, Mode)
 {
-	RegExMatch(String, "algorithm=\K\w+", algorithm)
+	RegExMatch(String, "i)algorithm=\K\w+", algorithm)
 	if !(algorithm ~= "i)(SHA1|SHA256|SHA512)")
 		algorithm := "SHA1"
-	RegExMatch(String, "digits=\K\d+", digits)
-	digits := digits ? digits : 6
-	RegExMatch(String, "period=\K\d+", period)
+	RegExMatch(String, "i)digits=\K\d+", digits)
+	digits := digits < 1 ? 1 : digits > 10 ? 10 : digits
+	RegExMatch(String, "i)period=\K\d+", period)
 	period := period ? period : 30
-	secret := String
-	if (InStr(String, "otpauth://totp") = 1)
-	{
-		if !RegExMatch(String, "secret=\K\w+", secret)
-			secret := String
-	}
-	else if (InStr(String, "steam://") = 1)
-	{
-		digits := 5
-		secret := SubStr(String, 9)
-	}
+	if RegExMatch(String, "i)^steam:\/\/\K.+", secret)
+		digits := 0
+	else if !RegExMatch(String, "i)secret=\K\w+", secret)
+		secret := StrReplace(String, " ")
 	totp := Totp(secret, digits, period, algorithm)
+	if (digits = 0)
+		totp := Totp_Steam(totp)
 	if (Mode = "default")
 	{
 		if (INI.GENERAL.totp)
@@ -68,6 +63,20 @@ Totp_Parse(String, Mode)
 			Totp_Tip(totp)
 	}
 	return totp
+}
+
+Totp_Steam(Totp)
+{
+	otp := ""
+	dict := StrSplit("23456789BCDFGHJKMNPQRTVWXY")
+	size := dict.Count()
+	loop 5
+	{
+		idx := Mod(Totp, size)
+		otp .= dict[idx + 1]
+		Totp /= size
+	}
+	return otp
 }
 
 Totp_Tip(Message)
