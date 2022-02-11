@@ -44,8 +44,10 @@ Totp_Parse(String, Mode)
 	RegExMatch(String, "i)algorithm=\K\w+", algorithm)
 	if !(algorithm ~= "i)(SHA1|SHA256|SHA512)")
 		algorithm := "SHA1"
-	RegExMatch(String, "i)digits=\K\d+", digits)
-	digits := digits < 1 ? 1 : digits > 10 ? 10 : digits
+	if RegExMatch(String, "i)digits=\K\d+", digits)
+		digits := Max(1, Min(10, digits))
+	else
+		digits := 6
 	RegExMatch(String, "i)period=\K\d+", period)
 	period := period ? period : 30
 	if RegExMatch(String, "i)^steam:\/\/\K.+", secret)
