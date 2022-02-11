@@ -104,7 +104,7 @@ Match_ByUrl(Url, Entry)
 
 Match_ParseUrl(hWnd, Exe)
 {
-	if !(Exe ~= "i)chrome|msedge|firefox|iexplore|opera")
+	if !(Exe ~= "i)chrome|msedge|firefox|iexplore|opera|min")
 		return
 	Url := Url_Get(hWnd, InStr(Exe, "ie"))
 	if (url)

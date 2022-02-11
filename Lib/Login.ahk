@@ -192,7 +192,7 @@ Login_Toggle(ShowTip := true)
 			ALert(0x10, out)
 			Exit
 		}
-		else if (FileOpen("data.json", 0).Length < 512)
+		else if (FileOpen("data.json", 0).Length < 1024)
 		{
 			Alert(0x10, "The server is misidentifying the application with a bot.`n`nLogin via Personal API Key is required to circumvent the issue.")
 			Reload

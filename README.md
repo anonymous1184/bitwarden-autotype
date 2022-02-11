@@ -4,7 +4,7 @@ A script-based, small (~1mb), Open Source Application written in [AutoHotkey][01
 
 It does NOT replace Bitwarden application as entries can't be added/edited. They can run side-by-side but is not required.
 
-<sup>_\* Even for the free version, but please support bitwarden development by buying a Premium subscription._</sup>
+<sup>_\* Even for the free version, but please support Bitwarden development by buying a Premium subscription._</sup>
 
 ## Security
 
@@ -56,11 +56,12 @@ The application attempts to fullfil the applicable Top-10 user requested feature
 - Quick custom PIN and Authenticator codes for unlocking.
 - Universal Window Platform support (Microsoft Store Apps).
 - Browser support: instead of insecure extensions.
-- All the major browsers (plus Internet Explorer) are supported.
+- All the major browsers (plus IE and [Min][06]) are supported.
 - TOTP generation: via Clipboard and/or hotkey and/or placeholder.
+- Steam Guard TOTP support (same as Bitwarden).
 - Strong Password Generator with entropy indicator.
 - Placeholder for smart detection of text input fields.
-- [Two-Channel Auto-Type Obfuscation][06]: global/per-entry.
+- [Two-Channel Auto-Type Obfuscation][07]: global/per-entry.
 
 ## Instructions
 
@@ -142,8 +143,8 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 [03]: https://keepass.info/help/base/autotype.html "KeePass Auto-type"
 [04]: https://bitwarden.com "Bitwarden"
 [05]: https://github.com/anonymous1184/bitwarden-autotype/wiki "Wiki not written yet"
-[06]: https://keepass.info/help/v2/autotype_obfuscation.html "TCATO: Two-Channel Auto-Type Obfuscation"
-
+[06]: https://minbrowser.org/ "Min: A fast, minimal browser that protects your privacy"
+[07]: https://keepass.info/help/v2/autotype_obfuscation.html "TCATO: Two-Channel Auto-Type Obfuscation"
 [08]: https://github.com/bitwarden/cli "Bitwarden CLI"
 [09]: https://github.com/bitwarden/jslib/blob/master/src/models/view/loginUriView.ts#L9 "loginUriView.ts:9"
 [10]: https://github.com/bitwarden/jslib/blob/master/src/angular/components/icon.component.ts#L80 "icon.component.ts:6"

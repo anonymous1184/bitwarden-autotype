@@ -1,7 +1,7 @@
 ﻿
 Epoch(Timestamp := "")
 {
-	epoch := (Timestamp ? Timestamp : A_NowUTC)
+	epoch := Timestamp ? Timestamp : A_NowUTC
 	epoch -= 19700101000000, Seconds
 	return epoch
 }

@@ -111,18 +111,9 @@ Bitwarden_SyncAuto(INI.GENERAL.sync)
 IsLocked := IsLogged := false
 BwStatus := FileOpen("data.json", 0x3).Read()
 BwStatus := BwStatus ? JSON.Load(BwStatus) : {}
-if (BwStatus.accessToken)
-{
-	if (INI.CREDENTIALS["api-key"]
-		&& BwStatus.apikey_clientId && BwStatus.apikey_clientSecret
-		&& BwStatus.apikey_clientId = INI.CREDENTIALS["client-id"]
-		&& BwStatus.apikey_clientSecret = INI.CREDENTIALS["client-secret"])
-	|| (!INI.CREDENTIALS["api-key"]
-		&& BwStatus.userEmail && BwStatus.userEmail = INI.CREDENTIALS.user)
-	{
-		IsLocked := IsLogged := true
-	}
-}
+;          v1.11 to v1.20        ||        v1.21+
+if (StrLen(BwStatus.accessToken) || StrLen(BwStatus.activeUserId))
+	IsLocked := IsLogged := true
 
 if (IsLocked)
 {
@@ -200,9 +191,9 @@ return ; End of auto-execute thread
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename bw-at.ahk
-;@Ahk2Exe-SetProductVersion 1.1.3.1
-;@Ahk2Exe-SetVersion 1.1.3.1
-;@Ahk2Exe-UpdateManifest 0, Auto-Type, 1.1.3.1, 0
+;@Ahk2Exe-SetProductVersion 1.1.4.1
+;@Ahk2Exe-SetVersion 1.1.4.1
+;@Ahk2Exe-UpdateManifest 0, Auto-Type, 1.1.4.1, 0
 ; BinMod
 ;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "2.AutoHotkeyGUI.Auto-Type-GUI"

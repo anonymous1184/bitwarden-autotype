@@ -14,7 +14,7 @@ Alert(Parameters*)
 Alert_Labels(ButtonList*)
 {
 	static fObject := ""
-		, pid := DllCall("GetCurrentProcessId")
+		, pid := DllCall("Kernel32\GetCurrentProcessId")
 
 	if !IsObject(fObject)
 	{
@@ -25,11 +25,11 @@ Alert_Labels(ButtonList*)
 
 	if !WinExist("ahk_pid" pid " ahk_class#32770")
 		return
+	fObject := ""
 	SetTimer ,, Delete
 	for i,lbl in ButtonList
 	{
 		if StrLen(lbl)
 			ControlSetText % "Button" i, % lbl
 	}
-	fObject := ""
 }

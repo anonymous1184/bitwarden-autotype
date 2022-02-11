@@ -47,7 +47,6 @@ class JSON
 
 	_init()
 	{
-		qpc()
 		if (this.lib)
 			return
 		this.lib := this._LoadLib()
@@ -62,7 +61,6 @@ class JSON
 
 		this.fnCastString := Func("Format").Bind("{}")
 		NumPut(&this.fnCastString, this.lib.fnCastString, "UPtr")
-		return qpc()
 	}
 
 	_LoadLib() {
