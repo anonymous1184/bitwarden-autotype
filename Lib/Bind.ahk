@@ -14,7 +14,7 @@ Bind()
 Bind_To(Field, Key)
 {
 	static fObjects := {}, keys := {}
-		, pid := DllCall("GetCurrentProcessId")
+		, pid := DllCall("Kernel32\GetCurrentProcessId")
 
 	Hotkey IfWinNotActive, % "ahk_pid" pid
 	if (!Field && !Key)

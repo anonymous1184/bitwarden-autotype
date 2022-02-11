@@ -1,9 +1,9 @@
 ﻿
 Favicons()
 {
-/* UrlDownloadToFile is way too primitive thus file
-download rely on cURL, shipped with W10 from builds
-1803 onwards (April 2018), check for availability.
+	/* UrlDownloadToFile is way too primitive thus file
+	download rely on cURL, shipped with W10 from builds
+	1803 onwards (April 2018), check for availability.
 	*/
 	GetStdStream("curl --version")
 	if (ErrorLevel)
