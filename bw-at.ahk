@@ -111,18 +111,9 @@ Bitwarden_SyncAuto(INI.GENERAL.sync)
 IsLocked := IsLogged := false
 BwStatus := FileOpen("data.json", 0x3).Read()
 BwStatus := BwStatus ? JSON.Load(BwStatus) : {}
-if (BwStatus.accessToken)
-{
-	if (INI.CREDENTIALS["api-key"]
-		&& BwStatus.apikey_clientId && BwStatus.apikey_clientSecret
-		&& BwStatus.apikey_clientId = INI.CREDENTIALS["client-id"]
-		&& BwStatus.apikey_clientSecret = INI.CREDENTIALS["client-secret"])
-	|| (!INI.CREDENTIALS["api-key"]
-		&& BwStatus.userEmail && BwStatus.userEmail = INI.CREDENTIALS.user)
-	{
+;          v1.11 to v1.20        ||        v1.21+
+if (StrLen(BwStatus.accessToken) || StrLen(BwStatus.activeUserId))
 		IsLocked := IsLogged := true
-	}
-}
 
 if (IsLocked)
 {
