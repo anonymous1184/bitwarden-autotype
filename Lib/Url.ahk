@@ -20,10 +20,13 @@ Url_Get(hWnd, isIE := false)
 Url_GetAddressBar(oAcc)
 {
 	; Firefox + Chromium-based + IE || Min Browser
-	if (oAcc.accRole(0) = 42 && InStr(oAcc.accName(0), "Address"))
-		|| (oAcc.accRole(0) = 15 && oAcc.accName(0) != "Min")
+	if (oAcc.accValue(0))
 	{
-		return oAcc
+		if (oAcc.accRole(0) = 42 && InStr(oAcc.accName(0), "Address"))
+			|| (oAcc.accRole(0) = 15 && oAcc.accName(0) != "Min")
+		{
+			return oAcc
+		}
 	}
 	for _,accChild in Acc_Children(oAcc)
 	{

@@ -4,7 +4,7 @@ A script-based, small (~1mb), Open Source Application written in [AutoHotkey][01
 
 It does NOT replace Bitwarden application as entries can't be added/edited. They can run side-by-side but is not required.
 
-<sup>_\* Even for the free version, but please support Bitwarden development by buying a Premium subscription._</sup>
+<sup>*\* Even for the free version, but please support Bitwarden development by [buying a subscription][05] (I'm not affiliated in any way).*</sup>
 
 ## Security
 
@@ -17,15 +17,19 @@ Here are some highlights for the more suspicious/paranoid:
 - `bw.exe` is not bundled, is retrieved from the official distribution.
 - No telemetry information or usage statics of any kind are ever generated.
 - There's no "dial home" as there is no home, only this public code repository.
-- When installed the approximate size is about 57mb, above 98% of the size is Bitwarden's own CLI.
+- When installed, the approximate size is about 60mb, 99% of the size is Bitwarden's own CLI.
 - The **optional** favicon retrieval, grabs a single icon from the sites (same as Bitwarden).
-- The **optional** update check is done by retrieving a small file in the repository ([this][i1] file).
-- Auto-type works fine if offline, blocked via firewall or with the previous options disabled.
-- The source code is embedded in the executable, can be read with any text editor (better yet, with [Resource Hacker][11]).
+- The **optional** update check is done by retrieving a small file in the repository ([this][06] file).
+- Auto-type works fine if offline, blocked via firewall or with the optional features disabled.
+- The source code is embedded within the executable, the resource can be easily inspected ([example][07]).
 - A build script is available in the repo if the pre-built binaries are not trusted (only a double click is needed).
-- The source code can be used as a script, thus avoiding the creation of any binary by just using AutoHotkey if installed.
+- The source code can be used as a script, thus avoiding the creation of any binary by just using AutoHotkey.
 
 Please note that even if the auto-type application does not need any network connectivity, `bw.exe` does for logging and synchronization of the vault.
+
+As of August 21 2021, Bitwarden increased its security requiring ***some*** users to use a Personal API Key; Auto-Type supports this, please refer to the official site for more information:
+
+<https://bitwarden.com/help/cli-auth-challenges/>
 
 ## Top-10 Forum Requests
 
@@ -48,7 +52,7 @@ The application attempts to fullfil the applicable Top-10 user requested feature
 
 ## Features at Glance
 
-~~[Wiki][05]~~ details them:
+~~[Wiki][08]~~ details them:
 
 - Auto-Type: with predefined and per-case sequences.
 - Supports multiple accounts and window definitions per site.
@@ -56,12 +60,12 @@ The application attempts to fullfil the applicable Top-10 user requested feature
 - Quick custom PIN and Authenticator codes for unlocking.
 - Universal Window Platform support (Microsoft Store Apps).
 - Browser support: instead of insecure extensions.
-- All the major browsers (plus IE and [Min][06]) are supported.
+- All the major browsers (plus IE and [Min][09]) are supported.
 - TOTP generation: via Clipboard and/or hotkey and/or placeholder.
 - Steam Guard TOTP support (same as Bitwarden).
 - Strong Password Generator with entropy indicator.
 - Placeholder for smart detection of text input fields.
-- [Two-Channel Auto-Type Obfuscation][07]: global/per-entry.
+- [Two-Channel Auto-Type Obfuscation][10]: global/per-entry.
 
 ## Instructions
 
@@ -71,7 +75,7 @@ Installer:
 
 Portable:
 
-- Place [Bitwarden CLI][08] (at least version `1.11`) in the same directory.
+- Place [Bitwarden CLI][11] (at least version `1.11`) in the same directory.
 
 Both:
 
@@ -87,7 +91,7 @@ Optional:
 - By URL:
   - `http://example.com`
   - `https://www.example.com/path/login.html?foo=bar`
-  - It follows the "_Match Detection_" in use by Bitwarden.
+  - It follows the "*Match Detection*" in use by Bitwarden.
 - By executable name:
   - `thunderbird.exe`
   - `app://thunderbird.exe`
@@ -103,7 +107,7 @@ Optional:
   - `app://?class=MozillaDialogClass`
   - `winapp://?class=MozillaDialogClass`
 
-Why `winapp://` or `app://`? Both are [currently unused][09]. `winapp://` is consistent with `androidapp://` and `iosapp://` which are in use. `app://` is OS agnostic (an Auto-Type for MacOS/Linux could make use of it). Protocols can be [iconified][10] (for example: `app://`, `macapp://`, `linuxapp://` and `winapp://`).
+Why `winapp://` or `app://`? Both are [currently unused][12]. `winapp://` is consistent with `androidapp://` and `iosapp://` which are in use. `app://` is OS agnostic (an Auto-Type app for MacOS/Linux could make use of it). Protocols can be [iconified][13] (for example: `app://`, `macapp://`, `linuxapp://` and `winapp://`).
 
 ## Known limitations
 
@@ -116,7 +120,7 @@ Why `winapp://` or `app://`? Both are [currently unused][09]. `winapp://` is con
   - Run the portable version as Administrator.
 - `{SmartTab}` doesn't work with Chromium-based applications.
   - Normal <kbd>Tab</kbd> is sent. For more than one <kbd>Tab</kbd> use a custom `auto-type` rule.
-- From October 2021 Bitwarden Server detects plain CLI logins (_ie_, no Two-Step Login) as a bot login attempt.
+- From October 2021 Bitwarden Server detects plain CLI logins (*ie*, no Two-Step Login) as a bot login attempt.
   - Use the Personal API Key instead of username/password to circumvent the issue.
 
 ## TODO
@@ -127,34 +131,34 @@ Why `winapp://` or `app://`? Both are [currently unused][09]. `winapp://` is con
 
 ## Help
 
-- ~~Checkout the [Wiki][05]~~.
-- In Reddit look for the [/r/Bitwarden][12] sub.
-- User-to-User support in Community [Forums][13].
-- GitHub [Issues][14] for app-specific problems/bugs.
+- ~~Checkout the [Wiki][08]~~.
+- On Reddit in the [/r/Bitwarden][14] sub, tag me.
+- User-to-User support in [Community Forums][15], tag me.
+- GitHub [Issues][16] for app-specific problems/bugs.
 
 ## Licence
 
-[WTFPL][15]
+[WTFPL][17]
 
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 [01]: https://autohotkey.com/ "AutoHotkey"
 [02]: https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm "TOTP: Time-based One-Time Password"
-[03]: https://keepass.info/help/base/autotype.html "KeePass Auto-type"
+[03]: https://keepass.info/help/base/autotype.html "KeePass Auto-Type"
 [04]: https://bitwarden.com "Bitwarden"
-[05]: https://github.com/anonymous1184/bitwarden-autotype/wiki "Wiki not written yet"
-[06]: https://minbrowser.org/ "Min: A fast, minimal browser that protects your privacy"
-[07]: https://keepass.info/help/v2/autotype_obfuscation.html "TCATO: Two-Channel Auto-Type Obfuscation"
-[08]: https://github.com/bitwarden/cli "Bitwarden CLI"
-[09]: https://github.com/bitwarden/jslib/blob/master/src/models/view/loginUriView.ts#L9 "loginUriView.ts:9"
-[10]: https://github.com/bitwarden/jslib/blob/master/src/angular/components/icon.component.ts#L80 "icon.component.ts:6"
-[11]: http://angusj.com/resourcehacker/ "Resource Hacker"
-[12]: https://www.reddit.com/r/Bitwarden/ "Bitwarden Subreddit"
-[13]: https://community.bitwarden.com/c/support/6 "Community Forums: User-to-User Support"
-[14]: https://github.com/anonymous1184/bitwarden-autotype/issues "Issues"
-[15]: http://www.wtfpl.net/about/ "Do What The Fuck You Want To Public License"
-
-[i1]: /version
+[05]: https://bitwarden.com/pricing/ "Bitwarden Plans and Pricing"
+[06]: /version
+[07]: /assets/reshack.png "Resource Hacker with bt-at.exe loaded"
+[08]: https://github.com/anonymous1184/bitwarden-autotype/wiki "Wiki not written yet"
+[09]: https://minbrowser.org/ "Min: A fast, minimal browser that protects your privacy"
+[10]: https://keepass.info/help/v2/autotype_obfuscation.html "TCATO: Two-Channel Auto-Type Obfuscation"
+[11]: https://github.com/bitwarden/cli "Bitwarden CLI"
+[12]: https://github.com/bitwarden/jslib/blob/master/common/src/models/view/loginUriView.ts#L9 "loginUriView.ts:9"
+[13]: https://github.com/bitwarden/jslib/blob/master/angular/src/components/icon.component.ts#L74 "icon.component.ts:74"
+[14]: https://www.reddit.com/r/Bitwarden/ "Bitwarden Subreddit"
+[15]: https://community.bitwarden.com/c/support/6 "Community Forums: User-to-User Support"
+[16]: https://github.com/anonymous1184/bitwarden-autotype/issues "Issues"
+[17]: http://www.wtfpl.net/about/ "Do What The Fuck You Want To Public License"
 
 [req01]: https://community.bitwarden.com/t/158
 [req02]: https://community.bitwarden.com/t/353

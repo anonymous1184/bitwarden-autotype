@@ -3,8 +3,11 @@
 
 if (!A_IsAdmin)
 {
-	Alert(0x10, "Build error", "Build process needs to run elevated.")
-	ExitApp 1
+	msg := "Build process needs to run as Administrator. Relaunch elevated?"
+	Alert(0x34, "Attention!", msg)
+	IfMsgBox Yes
+		Run % A_ScriptFullPath,, UseErrorLevel
+	ExitApp
 }
 
 SetWorkingDir % A_ScriptDir

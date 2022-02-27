@@ -118,14 +118,10 @@ Login_Credentials(Passwd)
 
 Login_Link()
 {
-	Alert(0x24, "Logging with a Personal API Key is the preferred method.`n"
-		. "`nYou need to use this method if you get the following error"
-		. ":`n`n>Your authentication request appears to be coming from "
-		. "a bot <`n`nDo you want further instructions on how to get a "
-		. "Personal API Key to use instead of username/password?")
+	message := "As of August 2021, the security in Bitwarden was increased to reduce bot traffic. Logging with a Personal API Key helps avoid Bitwarden misidentify the application with a bot.`n`nDo you want further instructions from the official Bitwarden documentation on how to get a Personal API Key?"
+	Alert(0x24,, message)
 	IfMsgBox Yes
-		Run % "https://bitwarden.com/help/article/personal-api-key/"
-			. "#get-your-personal-api-key"
+		Run % "https://bitwarden.com/help/article/personal-api-key/#get-your-personal-api-key"
 }
 
 Login_Ok()

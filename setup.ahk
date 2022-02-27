@@ -1,4 +1,12 @@
-﻿; Defaults
+﻿
+; Script is meant to create the installer, not act as one.
+if (!A_IsCompiled) {
+	msg := "Build the application, then use 'setup.exe'"
+	Alert(0x10, "ERROR", msg)
+	ExitApp 1
+}
+
+; Defaults
 ListLines Off
 SetBatchLines -1
 DetectHiddenWindows On
@@ -286,9 +294,9 @@ return
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename setup.ahk
-;@Ahk2Exe-SetProductVersion 1.1.4.1
-;@Ahk2Exe-SetVersion 1.1.4.1
-;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.4.1, 0
+;@Ahk2Exe-SetProductVersion 1.1.4.2
+;@Ahk2Exe-SetVersion 1.1.4.2
+;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.4.2, 0
 ; BinMod
 ;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "2.AutoHotkeyGUI.Auto-Type-GUI"
