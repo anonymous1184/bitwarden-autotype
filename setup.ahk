@@ -1,4 +1,12 @@
-﻿; Defaults
+﻿
+; Script is meant to create the installer, not act as one.
+if (!A_IsCompiled) {
+	msg := "Build the application, then use 'setup.exe'"
+	Alert(0x10, "ERROR", msg)
+	ExitApp 1
+}
+
+; Defaults
 ListLines Off
 SetBatchLines -1
 DetectHiddenWindows On
