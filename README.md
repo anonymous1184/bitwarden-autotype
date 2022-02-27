@@ -27,6 +27,10 @@ Here are some highlights for the more suspicious/paranoid:
 
 Please note that even if the auto-type application does not need any network connectivity, `bw.exe` does for logging and synchronization of the vault.
 
+As of August 21 2021, Bitwarden increased its security requiring ***some*** users to use a Personal API Key; Auto-Type supports this, please refer to the official site for more information:
+
+<https://bitwarden.com/help/cli-auth-challenges/>
+
 ## Top-10 Forum Requests
 
 The application attempts to fullfil the applicable Top-10 user requested features of the community:
