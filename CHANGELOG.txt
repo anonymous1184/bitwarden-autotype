@@ -1,11 +1,19 @@
-YYYY/MM/DD - MAJOR.MINOR.RELEASE
-————————————————————————————————
+YYYY/MM/DD - MAJOR.MINOR.RELEASE.BUILD
+——————————————————————————————————————
 [+] = Added
 [*] = Changed
 [-] = Removed
 [^] = Moved
 [=] = Unchanged
 [!] = Fix / Security
+
+
+2022/02/26 - 1.1.4.2
+——————————————————--
+[+] Better URL detection
+[+] Added support for Opera GX
+[*] Small README.md updates
+[=] Bitwarden CLI version >= 1.11.0
 
 
 2022/02/11 - 1.1.4
