@@ -294,9 +294,9 @@ return
 ;@Ahk2Exe-SetMainIcon %A_ScriptDir%\assets\bw-at.ico
 ;@Ahk2Exe-SetName Bitwarden Auto-Type
 ;@Ahk2Exe-SetOrigFilename setup.ahk
-;@Ahk2Exe-SetProductVersion 1.1.4.2
-;@Ahk2Exe-SetVersion 1.1.4.2
-;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.4.2, 0
+;@Ahk2Exe-SetProductVersion 1.1.4.3
+;@Ahk2Exe-SetVersion 1.1.4.3
+;@Ahk2Exe-UpdateManifest 1, Auto-Type, 1.1.4.3, 0
 ; BinMod
 ;@Ahk2Exe-PostExec "%A_ScriptDir%\assets\BinMod.exe" "%A_WorkFileName%"
 ;@Ahk2Exe-Cont  "2.AutoHotkeyGUI.Auto-Type-GUI"

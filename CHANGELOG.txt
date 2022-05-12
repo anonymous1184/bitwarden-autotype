@@ -8,6 +8,15 @@ YYYY/MM/DD - MAJOR.MINOR.RELEASE.BUILD
 [!] = Fix / Security
 
 
+2022/05/12 - 1.1.4.3
+——————————————————--
+[!] Fix for Firefox (#30)
+[!] Fix for new Chrome versions
+[+] Support for older IE versions
+[+] URL detection in not language specific now
+[=] Bitwarden CLI version >= 1.11.0
+
+
 2022/02/26 - 1.1.4.2
 ——————————————————--
 [+] Better URL detection
