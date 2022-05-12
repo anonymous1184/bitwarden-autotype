@@ -28,7 +28,7 @@ Match(Mode)
 	WinGet exe, ProcessName
 
 	; Get Url and it parts if browser
-	url := Match_ParseUrl(hWnd, exe)
+	url := Match_ParseUrl(hWnd, exe, activeClass)
 
 	matches := []
 	; Loop through the JSON
@@ -102,11 +102,11 @@ Match_ByUrl(Url, Entry)
 	}
 }
 
-Match_ParseUrl(hWnd, Exe)
+Match_ParseUrl(hWnd, Exe, WinClass)
 {
-	if !(Exe ~= "i)(chrome|msedge|firefox|iexplore|opera|min)\.")
+	if !(Exe ~= "i)^(chrome|msedge|firefox|iexplore|opera|min)\.exe")
 		return
-	Url := Url_Get(hWnd, InStr(Exe, "ie"))
+	Url := Url_Get(hWnd, WinClass)
 	if (url)
 	{
 		Url_Split(url, host, domain)

@@ -1,10 +1,15 @@
 ﻿
-Url_Get(hWnd, isIE := false)
+Url_Get(hWnd, WinClass)
 {
 	static cache := []
-	if (!cache.HasKey(hWnd) || isIE)
+
+	if (!cache.HasKey(hWnd))
 	{
 		oAcc := Acc_ObjectFromWindow(hWnd)
+		if (WinClass = "Chrome_WidgetWin_1") {
+			PostMessage 0x003D, 0, 1, Chrome_RenderWidgetHostHWND1
+			oAcc.accName(0)
+		}
 		cache[hWnd] := Url_GetAddressBar(oAcc)
 	}
 	try
@@ -13,23 +18,17 @@ Url_Get(hWnd, isIE := false)
 	{
 		cache.Delete(hWnd)
 		if InStr(e.Message, "800401FD")
-			return Url_Get(hWnd)
+			return Url_Get(hWnd, WinClass)
 	}
 }
 
 Url_GetAddressBar(oAcc)
 {
-	; Firefox + Chromium-based + IE || Min Browser
-	if (oAcc.accValue(0))
-	{
-		if (oAcc.accRole(0) = 42 && InStr(oAcc.accName(0), "Address"))
-			|| (oAcc.accRole(0) = 15 && oAcc.accName(0) != "Min")
-		{
-			return oAcc
-		}
-	}
-	for _,accChild in Acc_Children(oAcc)
-	{
+	if (ComObjType(oAcc, "Name") != "IAccessible")
+		return
+	if (oAcc.accValue(0) ~= "^(?!file:.+\/Min\/App\/)\w+:")
+		return oAcc
+	for _,accChild in Acc_Children(oAcc) {
 		oAcc := Url_GetAddressBar(accChild)
 		if IsObject(oAcc)
 			return oAcc

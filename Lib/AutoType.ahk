@@ -92,7 +92,7 @@ AutoType_Part(part, Entry, ByRef obfuscate)
 			Tcato(txt, UserSeed, wait, ksps)
 		}
 		else if (txt != "{TOTP}") ; TOTP placeholder but no code
-			Send % "{Text}" txt
+			Send % "{Blind}{Raw}" txt
 	}
 	return StrLen(part)
 }
