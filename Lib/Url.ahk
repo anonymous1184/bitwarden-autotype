@@ -26,7 +26,7 @@ Url_GetAddressBar(oAcc)
 {
 	if (ComObjType(oAcc, "Name") != "IAccessible")
 		return
-	if (oAcc.accValue(0) ~= "^(?!file:.+\/Min\/App\/)\w+:")
+	if (oAcc.accValue(0) ~= "^(?!file:.+\/Min\/App\/)[\w-]+:")
 		return oAcc
 	for _,accChild in Acc_Children(oAcc) {
 		oAcc := Url_GetAddressBar(accChild)
