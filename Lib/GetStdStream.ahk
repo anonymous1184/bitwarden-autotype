@@ -10,7 +10,8 @@ GetStdStream(CommandLine, Environment := "")
 	NumPut(104, lpStartupInfo) ; STARTUPINFO size
 	NumPut(0x100, lpStartupInfo, 60) ; dwFlags = STARTF_USESTDHANDLES
 	NumPut(hPipeWrite, lpStartupInfo, 88) ; hStdOutput
-	NumPut(hPipeWrite, lpStartupInfo, 96) ; hStdError
+	; Ignore StdError
+	; NumPut(hPipeWrite, lpStartupInfo, 96) ; hStdError
 
 	lpEnvironment := 0
 	if IsObject(Environment)
